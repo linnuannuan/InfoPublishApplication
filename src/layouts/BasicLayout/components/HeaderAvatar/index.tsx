@@ -24,7 +24,6 @@ const logOut=()=>{
   window.localStorage.removeItem('type')
   // window.localStorage.removeItem('id')
   window.location.reload()
-  
 
 }
 

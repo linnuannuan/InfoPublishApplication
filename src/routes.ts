@@ -39,6 +39,7 @@ import ShowInfo from '@/pages/ShowInfo';
 import Index from '@/pages/Index';
 import Invest from './pages/Invest';
 import Vip from './pages/VIP'
+import ResetPw from './pages/ResetPassword'
 
 
 const routerConfig = [
@@ -48,7 +49,8 @@ const routerConfig = [
     children: [
       { path: '/login', component: Login },
       { path: '/register', component: Register },
-      // { path: '/', redirect: '/login' },
+      { path: '/resetpassword', component: ResetPw}
+      // { path: '', redirect: '/login' },
     ],
   },
   {

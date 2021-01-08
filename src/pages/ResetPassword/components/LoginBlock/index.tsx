@@ -9,20 +9,19 @@ import axios from 'axios'
 
 const { Item } = Form;
 
-export interface RegisterProps {
-  email: string;
+export interface ResetProps {
+  userName: string;
   password: string;
   rePassword: string;
-  phone: string;
+  telephone: string;
   code: string;
 }
 
-export default function RegisterBlock() {
+export default function ResetBlock() {
   const [postData, setValue] = useState({
-    email: '',
     password: '',
     rePassword: '',
-    phone: '',
+    telephone: '',
     code: '',
   });
 
@@ -37,13 +36,13 @@ export default function RegisterBlock() {
     }
   }, isRunning ? 1000 : null);
 
-  const formChange = (value: RegisterProps) => {
+  const formChange = (value: ResetProps) => {
     setValue(value);
   };
 
-  const sendCode = (values: RegisterProps, errors: []) => {
+  const sendCode = (values: ResetProps, errors: []) => {
 
-    axios.post('/getSmsCode/register', 
+    axios.post('/getSmsCode/resetPassword', 
       {
         telephone:values.telephone
       }
@@ -73,58 +72,30 @@ export default function RegisterBlock() {
     }
   };
 
-  const checkUserName= (rule: any, values: string, callback: (errors?: string) => void) => { 
-    // axios.post('/hasUsername',{username:values})
-    //     .then((response)=>{
-    //       if(response.data.flag){
-    //         return callback('用户名已存在');
-    //       }
-    //       else {
-    //         return callback();
-    //       }
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
-        
-  };
 
-  //telphone 一样
-  // hasTelphone
-  const checkTelExist=(rule: any, values: string, callback: (errors?: string) => void) => {
-    // axios.post('/hasTelphone',{telephone:values})
-    //       .then((response)=>{
-    //         if(response.data.flag){
-    //           return callback('电话号码已注册');
-    //         }
-    //         else {
-    //           return callback();
-    //         }
-    //       })
-    //       .catch(function (error) {
-    //         console.log(error);
-    //       });
-  };
 
-  const handleSubmit = (values: RegisterProps, errors: []) => {
-    console.log(values)
-    axios.post('/register',values)
-          .then((response)=>{
-            if(response.data.msg == "success"){
-              Message.success('注册成功')
-            }
-            else {
-              Message.error(response.data.msg);
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-            Message.error(error)
-          });
+
+
+
+
+  const handleSubmit = (values: ResetProps, errors: []) => {
+
+    axios.post('/resetPassword',values)
+        .then((response)=>{
+
+
+          Message.success('修改成功');
+
+        })
+        .catch((error)=>{
+          console.log('errors', error);
+          Message.error(error)
+        })
+
   };
 
   return (
-    <div className={styles.RegisterBlock}>
+    <div className={styles.ResetBlock}>
       <div className={styles.innerBlock}>
         <a href="#">
           <img
@@ -133,29 +104,10 @@ export default function RegisterBlock() {
             alt="logo"
           />
         </a>
-        <p className={styles.desc}>注册账号</p>
+        <p className={styles.desc}>忘记密码</p>
 
         <Form value={postData} onChange={formChange} size="large">
-          <Item validator={checkUserName} required requiredMessage="必填">
-            <Input name="username" size="large" maxLength={20} placeholder="用户名" />
-          </Item>
-          <Item required requiredMessage="必填">
-            <Input.Password
-              name="password"
-              size="large"
-              htmlType="password"
-              placeholder="至少六位密码，区分大小写"
-            />
-          </Item>
-          <Item required requiredTrigger="onFocus" requiredMessage="必填" validator={checkPass}>
-            <Input.Password
-              name="rePassword"
-              size="large"
-              htmlType="password"
-              placeholder="确认密码"
-            />
-          </Item>
-          <Item format="tel" required requiredMessage="必填" asterisk={false} validator={checkTelExist}>
+        <Item format="tel" required requiredMessage="必填" asterisk={false}>
             <Input
               name="telephone"
               size="large"
@@ -181,7 +133,7 @@ export default function RegisterBlock() {
                     type="primary"
                     style={{ width: 64 }}
                     disabled={!!isRunning}
-                    validate={['phone']}
+                    validate={['telephone']}
                     onClick={sendCode}
                     className={styles.sendCode}
                   >
@@ -193,14 +145,30 @@ export default function RegisterBlock() {
               placeholder="验证码"
             />
           </Item>
+          <Item required requiredMessage="必填">
+            <Input.Password
+              name="password"
+              size="large"
+              htmlType="password"
+              placeholder="至少六位密码，区分大小写"
+            />
+          </Item>
+          <Item required requiredTrigger="onFocus" requiredMessage="必填" validator={checkPass}>
+            <Input.Password
+              name="rePassword"
+              size="large"
+              htmlType="password"
+              placeholder="确认密码"
+            />
+          </Item>
           <Item>
             <Form.Submit
               type="primary"
               onClick={handleSubmit}
               className={styles.submitBtn}
-              // validate
+              validate
             >
-              注册账号
+              修改密码
             </Form.Submit>
           </Item>
           <Item style={{ textAlign: 'center' }}>
@@ -214,11 +182,11 @@ export default function RegisterBlock() {
   );
 }
 
-RegisterBlock.propTypes = {
+ResetBlock.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
   value: PropTypes.object,
 };
 
-RegisterBlock.defaultProps = {
+ResetBlock.defaultProps = {
   value: {},
 };
