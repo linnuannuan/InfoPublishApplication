@@ -15,148 +15,148 @@ export interface news {
 const newInfo = [
   {
     moduleFlag:"招商",
-    title:"四川学校食堂劳务承包公告",
+    company:"四川学校食堂劳务承包公告",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"加盟",
-    title:"北京阿松大餐饮管理有限公司",
+    company:"北京阿松大餐饮管理有限公司",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"郑州金水区餐厅招商",
+    company:"郑州金水区餐厅招商",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"海南中学食堂托管服务招标公告",
+    company:"海南中学食堂托管服务招标公告",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"加盟",
-    title:"北京金百禾餐饮管理有限公司",
+    company:"北京金百禾餐饮管理有限公司",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"郑州金水区餐厅招商",
+    company:"郑州金水区餐厅招商",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"郑州金水区餐厅招商",
+    company:"郑州金水区餐厅招商",
     validTime:"2020-01-04"
   },{
     moduleFlag:"招商",
-    title:"四川学校食堂劳务承包公告",
+    company:"四川学校食堂劳务承包公告",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"加盟",
-    title:"北京阿松大餐饮管理有限公司",
+    company:"北京阿松大餐饮管理有限公司",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"郑州金水区餐厅招商",
+    company:"郑州金水区餐厅招商",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"海南中学食堂托管服务招标公告",
+    company:"海南中学食堂托管服务招标公告",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"加盟",
-    title:"北京金百禾餐饮管理有限公司",
+    company:"北京金百禾餐饮管理有限公司",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"郑州金水区餐厅招商",
+    company:"郑州金水区餐厅招商",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"郑州金水区餐厅招商",
+    company:"郑州金水区餐厅招商",
     validTime:"2020-01-04"
   },{
     moduleFlag:"招商",
-    title:"四川学校食堂劳务承包公告",
+    company:"四川学校食堂劳务承包公告",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"加盟",
-    title:"北京阿松大餐饮管理有限公司",
+    company:"北京阿松大餐饮管理有限公司",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"郑州金水区餐厅招商",
+    company:"郑州金水区餐厅招商",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"海南中学食堂托管服务招标公告",
+    company:"海南中学食堂托管服务招标公告",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"加盟",
-    title:"北京金百禾餐饮管理有限公司",
+    company:"北京金百禾餐饮管理有限公司",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"郑州金水区餐厅招商",
+    company:"郑州金水区餐厅招商",
     validTime:"2020-01-04"
   },
   {
     moduleFlag:"招商",
-    title:"郑州金水区餐厅招商",
+    company:"郑州金水区餐厅招商",
     validTime:"2020-01-04"
   }
 ]
 const investData= [
   {
     id:'1',
-    title: '上海一片天餐饮管理股份有限公司',
+    company: '上海一片天餐饮管理股份有限公司',
     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
     email:'dadas@mail.com',
     url:'(7)',
-    date:'2020-12-22',
+    applyTime:'2020-12-22',
   },
   {
     id:'2',
-    title: '上海一片天餐饮管理股份有限公司',
+    company: '上海一片天餐饮管理股份有限公司',
     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
     email:'dadas@mail.com',
     url:'(8)',
-    date:'2020-12-22',
+    applyTime:'2020-12-22',
   },
   {
     id:'3',
-    title: '上海一片天餐饮管理股份有限公司',
+    company: '上海一片天餐饮管理股份有限公司',
     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
     email:'dadas@mail.com',
     url:'(9)',
-    date:'2020-12-22',
+    applyTime:'2020-12-22',
   },
   {
     id:'4',
-    title: '上海一片天餐饮管理股份有限公司',
+    company: '上海一片天餐饮管理股份有限公司',
     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
     email:'dadas@mail.com',
     url:'(10)',
-    date:'2020-12-22',
+    applyTime:'2020-12-22',
   },
   {
     id:'5',
-    title: '上海一片天餐饮管理股份有限公司',
+    company: '上海一片天餐饮管理股份有限公司',
     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
     email:'dadas@mail.com',
     url:'(11)',
-    date:'2020-12-22',
+    applyTime:'2020-12-22',
   }
 ]
 
@@ -186,9 +186,9 @@ const renderContent=(dataSource)=>{
             <img src="../public/(5).jpg" alt="招商5" width="20%"></img>
           </Card.Content>
           <Card.Divider />
-          <Card.Actions style={{textAlign: 'right'}}>
+          {/* <Card.Actions style={{textAlign: 'right'}}>
             <Button type="primary" key="action2" text>更多推荐</Button>
-          </Card.Actions>
+          </Card.Actions> */}
         </Card>
       </Cell>
       <Cell colSpan={12}>
@@ -198,7 +198,7 @@ const renderContent=(dataSource)=>{
           <Card.Content>
               {dataSource.newInfo.map(d=>{
                 return <div style={{width:"25%", float:"left"}}>
-                          <span style={{width:"15%", color:"orange"}}>[{d.moduleFlag}]</span>&nbsp;&nbsp;<span style={{width:"60%"}}>{d.title}</span>&nbsp;&nbsp;<span style={{width:"20%",color:"blue", float:"right",right:'5%'}}>{d.validTime}</span>
+                          <span style={{width:"15%", color:"orange"}}>[{d.moduleFlag == 0?"招商":(d.moduleFlag == 1?"加盟":"招标")}]</span>&nbsp;&nbsp;<span style={{width:"60%"}}>{d.company}</span>&nbsp;&nbsp;<span style={{width:"20%",color:"blue", float:"right",right:'5%'}}>{d.validTime}</span>
                        </div>
               })}
             {/* </Cell> */}
@@ -228,8 +228,8 @@ const renderContent=(dataSource)=>{
                             }}
                             free
                         >
-                            <Card.Media style={{ height: "200px"}} image={"../public/"+d.url+".jpg"} />
-                            <Card.Header title={d.title} 
+                            <Card.Media style={{ height: "200px"}} image={"/"+d.picPath} />
+                            <Card.Header title={d.company} 
                               // subTitle="Sub Title" 
                               // extra={<Button moduleFlag="primary" text>Link</Button>} 
                             />
@@ -239,7 +239,7 @@ const renderContent=(dataSource)=>{
                                 招商简介：{d.content}
                               </div>
                               <div style={{fontSize:12,color:'gray'}}>
-                                发布时间: {d.date}
+                                发布时间: {d.applyTime}
                               </div>
 
                             </Card.Content>
@@ -275,8 +275,8 @@ const renderContent=(dataSource)=>{
                             }}
                             free
                         >
-                            <Card.Media style={{ height: "200px"}} image={"../public/"+d.url+".jpg"} />
-                            <Card.Header title={d.title} 
+                            <Card.Media style={{ height: "200px"}} image={"/"+d.picPath} />
+                            <Card.Header title={d.company} 
                               // subTitle="Sub Title" 
                               // extra={<Button moduleFlag="primary" text>Link</Button>} 
                             />
@@ -286,7 +286,7 @@ const renderContent=(dataSource)=>{
                                 招商简介：{d.content}
                               </div>
                               <div style={{fontSize:12,color:'gray'}}>
-                                发布时间: {d.date}
+                                发布时间: {d.applyTime}
                               </div>
 
                             </Card.Content>
@@ -322,8 +322,8 @@ const renderContent=(dataSource)=>{
                             }}
                             free
                         >
-                            <Card.Media style={{ height: "200px"}} image={"../public/"+d.url+".jpg"} />
-                            <Card.Header title={d.title} 
+                            <Card.Media style={{ height: "200px"}} image={"/"+d.picPath} />
+                            <Card.Header title={d.company} 
                               // subTitle="Sub Title" 
                               // extra={<Button moduleFlag="primary" text>Link</Button>} 
                             />
@@ -333,7 +333,7 @@ const renderContent=(dataSource)=>{
                                 简介：{d.content}
                               </div>
                               <div style={{fontSize:12,color:'gray'}}>
-                                发布时间: {d.date}
+                                发布时间: {d.applyTime}
                               </div>
 
                             </Card.Content>
@@ -355,10 +355,16 @@ const renderContent=(dataSource)=>{
 
 
 const Index = () => {
-  axios.post('/user/zhaoShangApply')
+  axios.post('/user/homeQuery')
     .then(function (response) {
       // dataSource = response
       console.log(response);
+
+      response.newInfo = response.zhaoshangApplyList.concat(response.joinApplyList).concat(response.zhaobiaoApplyList).sort(function(a, b) {
+        var x = a['time'];
+        var y = b['time'];
+        return x > y ? -1 : x < y ? 1 : 0;
+      });
       return renderContent(response)
     })
     .catch(function (error) {

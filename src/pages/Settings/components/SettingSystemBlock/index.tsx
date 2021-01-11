@@ -268,6 +268,20 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
     });
   }
 
+  //信息已促成
+  const handleJoinSubmit =(id,role)=>{
+    axios.post('/dealJoin', 
+      {
+        id:id,
+      }
+    )
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
 
 
   //确定设置数值
@@ -455,11 +469,12 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
             <Card.Content>
               <Table dataSource={applyData} hasBorder={false}>
                 <Table.Column title="序号" dataIndex="id" />
+                <Table.Column title="申请人" dataIndex="username" />
                 <Table.Column title="项目名称" dataIndex="title" />
                 <Table.Column title="邮箱" dataIndex="email" />
                 <Table.Column title="电话号码" dataIndex="telephone" />
                 {/* <Table.Column dataIndex="period" /> */}
-                <Table.Column title="申请时间" dataIndex="time" />
+                <Table.Column title="申请时间" dataIndex="joinTime" />
                 <Table.Column cell={(value,index,record) => {
                     if(record.dealFlag){
                       return <>

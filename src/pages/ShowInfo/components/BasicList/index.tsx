@@ -5949,18 +5949,18 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     // });
   }
 
-  //更新上下架
-  const updateValid =(id,status)=>{
-    // axios.post('/valid', {
-    //   id: 2121,
-    //   status: 0
-    // })
-    // .then(function (response) {
-    //   console.log(response);
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    // });
+   //更新上下架  1/0
+   const updateValid =(id,status)=>{
+    axios.post('/manage/validZhaoshangApply', {
+      id: id,
+      flag: status
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
 
@@ -6126,7 +6126,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
       }
       else if (verify){
         return(
-          <Button type="secondary" onClick={updateValid(id,2)}>下架信息</Button>
+          <Button type="secondary" onClick={updateValid(id,0)}>下架信息</Button>
         )  
       }
       else if (!verify){
