@@ -2,121 +2,119 @@ import React from 'react';
 import { Button, ResponsiveGrid } from '@alifd/next';
 import PageHeader from '@/components/PageHeader';
 import {Card } from '@alifd/next';
-import FusionCardBarChart from './components/FusionCardBarChart';
-import FusionCardAreaChart from './components/FusionCardAreaChart';
-import FusionCardTypebarChart from './components/FusionCardTypebarChart';
-import FusionCardLineChart from './components/FusionCardLineChart';
-import FusionCardRankChart from './components/FusionCardRankChart';
-import FusionCardPieChart from './components/FusionCardPieChart';
-import FusionCardGroupBarChart from './components/FusionCardGroupBarChart';
-import { gray } from 'colorette';
+import axios from 'axios';
 
 const { Cell } = ResponsiveGrid;
 
+export interface news {
+  title?: string;
+  validTime?: string;
+  moduleFlag?:string;
+}
 
 const newInfo = [
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"四川学校食堂劳务承包公告",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"加盟",
+    moduleFlag:"加盟",
     title:"北京阿松大餐饮管理有限公司",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"郑州金水区餐厅招商",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"海南中学食堂托管服务招标公告",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"加盟",
+    moduleFlag:"加盟",
     title:"北京金百禾餐饮管理有限公司",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"郑州金水区餐厅招商",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"郑州金水区餐厅招商",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },{
-    type:"招商",
+    moduleFlag:"招商",
     title:"四川学校食堂劳务承包公告",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"加盟",
+    moduleFlag:"加盟",
     title:"北京阿松大餐饮管理有限公司",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"郑州金水区餐厅招商",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"海南中学食堂托管服务招标公告",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"加盟",
+    moduleFlag:"加盟",
     title:"北京金百禾餐饮管理有限公司",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"郑州金水区餐厅招商",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"郑州金水区餐厅招商",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },{
-    type:"招商",
+    moduleFlag:"招商",
     title:"四川学校食堂劳务承包公告",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"加盟",
+    moduleFlag:"加盟",
     title:"北京阿松大餐饮管理有限公司",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"郑州金水区餐厅招商",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"海南中学食堂托管服务招标公告",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"加盟",
+    moduleFlag:"加盟",
     title:"北京金百禾餐饮管理有限公司",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"郑州金水区餐厅招商",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   },
   {
-    type:"招商",
+    moduleFlag:"招商",
     title:"郑州金水区餐厅招商",
-    time:"2020-01-04"
+    validTime:"2020-01-04"
   }
 ]
 const investData= [
@@ -162,20 +160,15 @@ const investData= [
   }
 ]
 
-// const generateInfo=(info)=>{
-//   let renderInfo = []
-//   while(info.length){
-//     renderInfo.push[info[0],info[1],info[2]]
-//     info = info.slice(3,)
-//   }
-//   return renderInfo.map(d=>{
-//     return <Cell colSpan={12}>
-//             <Cell colSpan={4}>
-//             </Cell>
-//   })
-// }
+const mockData = {
+  newInfo:newInfo,
+  joinApplyList:investData,
+  zhaoshangApplyList:investData,
+  zhaobiaoApplyList:investData
+}
 
-const Index = () => {
+const renderContent=(dataSource)=>{
+
   return (
     <ResponsiveGrid gap={20}>
       <Cell colSpan={12}>
@@ -203,9 +196,9 @@ const Index = () => {
           <Card.Header title={"最新公告"} />
           <Card.Divider />
           <Card.Content>
-              {newInfo.map(d=>{
+              {dataSource.newInfo.map(d=>{
                 return <div style={{width:"25%", float:"left"}}>
-                          <span style={{width:"15%", color:"orange"}}>[{d.type}]</span>&nbsp;&nbsp;<span style={{width:"60%"}}>{d.title}</span>&nbsp;&nbsp;<span style={{width:"20%",color:"blue", float:"right",right:'5%'}}>{d.time}</span>
+                          <span style={{width:"15%", color:"orange"}}>[{d.moduleFlag}]</span>&nbsp;&nbsp;<span style={{width:"60%"}}>{d.title}</span>&nbsp;&nbsp;<span style={{width:"20%",color:"blue", float:"right",right:'5%'}}>{d.validTime}</span>
                        </div>
               })}
             {/* </Cell> */}
@@ -220,7 +213,7 @@ const Index = () => {
           <Card.Divider />
           <Card.Content>
             {
-              investData.map(d=>{
+              dataSource.zhaoshangApplyList.map(d=>{
                 return <Card
                             className="free-card"
                             style={{
@@ -238,7 +231,7 @@ const Index = () => {
                             <Card.Media style={{ height: "200px"}} image={"../public/"+d.url+".jpg"} />
                             <Card.Header title={d.title} 
                               // subTitle="Sub Title" 
-                              // extra={<Button type="primary" text>Link</Button>} 
+                              // extra={<Button moduleFlag="primary" text>Link</Button>} 
                             />
                             <Card.Divider />
                             <Card.Content>
@@ -251,8 +244,8 @@ const Index = () => {
 
                             </Card.Content>
                             {/* <Card.Actions>
-                                <Button type="primary" key="action1" text>Action 1</Button>
-                                <Button type="primary" key="action2" text>Action 2</Button>
+                                <Button moduleFlag="primary" key="action1" text>Action 1</Button>
+                                <Button moduleFlag="primary" key="action2" text>Action 2</Button>
                             </Card.Actions> */}
                         </Card>
               }) 
@@ -267,7 +260,7 @@ const Index = () => {
           <Card.Divider />
           <Card.Content>
           {
-              investData.map(d=>{
+              dataSource.joinApplyList.map(d=>{
                 return <Card
                             className="free-card"
                             style={{
@@ -285,7 +278,7 @@ const Index = () => {
                             <Card.Media style={{ height: "200px"}} image={"../public/"+d.url+".jpg"} />
                             <Card.Header title={d.title} 
                               // subTitle="Sub Title" 
-                              // extra={<Button type="primary" text>Link</Button>} 
+                              // extra={<Button moduleFlag="primary" text>Link</Button>} 
                             />
                             <Card.Divider />
                             <Card.Content>
@@ -298,8 +291,8 @@ const Index = () => {
 
                             </Card.Content>
                             {/* <Card.Actions>
-                                <Button type="primary" key="action1" text>Action 1</Button>
-                                <Button type="primary" key="action2" text>Action 2</Button>
+                                <Button moduleFlag="primary" key="action1" text>Action 1</Button>
+                                <Button moduleFlag="primary" key="action2" text>Action 2</Button>
                             </Card.Actions> */}
                         </Card>
               }) 
@@ -308,18 +301,72 @@ const Index = () => {
         </Card>
       </Cell>
 
-      {/* <Cell colSpan={12}>
+      <Cell colSpan={12}>
         <Card free>
-          <Card.Header title={"VIP板块"} />
+          <Card.Header title={"转让及招标信息"} />
           <Card.Divider />
           <Card.Content>
-            <img src="../public/vip.jpg" alt="招商" width="20%"></img>
+          {
+              dataSource.zhaobiaoApplyList.map(d=>{
+                return <Card
+                            className="free-card"
+                            style={{
+                              display: 'inline-block',
+                              width: '20%',
+                              verticalAlign: 'top',
+                              padding:'10px',
+                              // display: 'flex',
+                              justifyContent: 'space-between',
+                              // width: '500px',
+                              // height: '200px',
+                            }}
+                            free
+                        >
+                            <Card.Media style={{ height: "200px"}} image={"../public/"+d.url+".jpg"} />
+                            <Card.Header title={d.title} 
+                              // subTitle="Sub Title" 
+                              // extra={<Button moduleFlag="primary" text>Link</Button>} 
+                            />
+                            <Card.Divider />
+                            <Card.Content>
+                              <div>
+                                简介：{d.content}
+                              </div>
+                              <div style={{fontSize:12,color:'gray'}}>
+                                发布时间: {d.date}
+                              </div>
+
+                            </Card.Content>
+                            {/* <Card.Actions>
+                                <Button moduleFlag="primary" key="action1" text>Action 1</Button>
+                                <Button moduleFlag="primary" key="action2" text>Action 2</Button>
+                            </Card.Actions> */}
+                        </Card>
+              }) 
+            }
           </Card.Content>
         </Card>
-      </Cell> */}
+      </Cell>
 
     </ResponsiveGrid>
   );
+}
+
+
+
+const Index = () => {
+  axios.post('/user/zhaoShangApply')
+    .then(function (response) {
+      // dataSource = response
+      console.log(response);
+      return renderContent(response)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+  return renderContent(mockData)
+  
 };
 
 export default Index;

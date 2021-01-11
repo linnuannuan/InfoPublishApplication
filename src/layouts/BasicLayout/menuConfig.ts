@@ -8,20 +8,20 @@ const asideMenuConfig = [
     // icon: 'chart-pie',
   },
   {
-    name: '招商',
-    path: '/invest',
-    // icon: 'chart-pie',
-  },
-  {
     name: '加盟',
     path: '/join',
     // icon: 'chart-pie',
   },
   {
-    name: 'VIP',
-    path: '/vip',
-    // icon: 'account',
+    name: '招商',
+    path: '/invest',
+    // icon: 'chart-pie',
   },
+  {
+    name: '转让及招标',
+    path: '/zhaobiao',
+    // icon: 'account',
+  }
   // {
   //   name: '后台',
   //   path: '/setting',

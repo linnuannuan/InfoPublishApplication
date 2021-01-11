@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Search, Card, Tag, Divider, Typography, Icon, Loading, Button, Pagination } from '@alifd/next';
-import { Dialog, Form, Field, Input, Select, Upload } from '@alifd/next';
+import { Dialog, Form, Field, Input, Select, Upload, Message } from '@alifd/next';
 import axios from 'axios';
 
 import styles from './index.module.scss';
@@ -120,6 +120,22 @@ const INPUT_DATA: InvestInfo={
 //申请VIP
 const applyVIP=()=>{
   // axios.post()
+  axios.post('/applyVip', {
+    vipType: 0
+  })
+  .then(function (response) {
+    console.log(response);
+    if(response.msg =='succcess'){
+      Message.success('已申请，请等待管理员审核');
+    }
+    else{
+      Message.error('申请失败')
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
 
 
 }
@@ -127,7 +143,21 @@ const applyVIP=()=>{
 
 //申请测试VIP
 const applytVIP=()=>{
-
+  axios.post('/applyVip', {
+    vipType: 1
+  })
+  .then(function (response) {
+    console.log(response);
+    if(response.msg =='succcess'){
+      Message.success('已申请，请等待管理员审核');
+    }
+    else{
+      Message.error('申请失败')
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 
 
 }

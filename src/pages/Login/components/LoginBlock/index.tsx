@@ -151,7 +151,7 @@ const LoginBlock: React.FunctionComponent<LoginProps> = (
     
   
     //跳转至首页
-    // window.location.href="/index";
+    window.location.href="/index";
   };
 
   // const phoneForm = (

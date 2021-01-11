@@ -10,8 +10,7 @@ const { Group: TagGroup, Selectable: SelectableTag } = Tag;
 // 0普通用户 1VIP  2管理员manager 
 
 // const userType = sessionStorage.SPRING_SECURITY_CONTEXT.authentication.principal.roleList.indexOf("ADMIN")>-1 ? 'manager':(sessionStorage.SPRING_SECURITY_CONTEXT.authentication.principal.roleList.indexOf("VIP")>-1?'vip':'user')
-// const userType = 'manager'
-const userType = 'user'
+const userType = 'manager'
 
 
 export interface ICardItem {
@@ -29,10 +28,9 @@ export interface InvestInfo {
   title:string,
   content: string,
   address: string,
-  telphone:string,
+  tel:string,
   email:string,
   filePathArray:Array<String>
-  
 }
 
 export interface DataSource {
@@ -47,7 +45,7 @@ export interface DataSource {
 
 export interface ApplyInfo {
   email: string;
-  telphone: string;
+  tel: string;
 }
 
 
@@ -5762,7 +5760,7 @@ const DEFAULT_DATA: DataSource = {
       id:'1',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       verify:0,
@@ -5772,7 +5770,7 @@ const DEFAULT_DATA: DataSource = {
       id:'2',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
@@ -5783,7 +5781,7 @@ const DEFAULT_DATA: DataSource = {
       id:'3',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
@@ -5794,7 +5792,7 @@ const DEFAULT_DATA: DataSource = {
       id:'4',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
@@ -5805,7 +5803,7 @@ const DEFAULT_DATA: DataSource = {
       id:'5',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
@@ -5822,14 +5820,14 @@ const DEFAULT_DATA: DataSource = {
 const INPUT_DATA: InvestInfo={
   title:'',
   content: '',
-  telphone:'',
+  tel:'',
   email:'',
   filePathArray:[]
 }
 
 const APPLY_DATA: ApplyInfo={
   email:'',
-  telphone:''
+  tel:''
 }
 
 
@@ -5859,7 +5857,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
   });
 
   useEffect(() => {
-    axios.post('/user/zhaoShangApply')
+    axios.post('/user/zhaobiaoList')
     .then(function (response) {
         setCardValue(response)
         
@@ -5877,7 +5875,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
   const onTagAValueChange = (value, data, extra) => {
     setLoading(true);
-    axios.post('/user/zhaoShangApply', 
+    axios.post('/user/zhaobiaoList', 
     {
         address:{
             province: extra.selectedPath[0]?.label,
@@ -5908,7 +5906,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
     console.log(value)
 
-    axios.post('/user/zhaoShangApply', {
+    axios.post('/user/zhaobiaoList', {
       title: value,
     })
     .then(function (response) {
@@ -5923,7 +5921,8 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
   };
 
   const onPaginationChange = (value) => {
-    axios.post('/user/zhaoShangApply', {
+    //用户查看内容
+    axios.post('/user/zhaobiaoList', {
       pageNum: value,
     })
     .then(function (response) {
@@ -5939,16 +5938,16 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
   //更新审核
   const updateVerify =(id,status)=>{
-    // axios.post('/verify', {
-    //   id: 2121,
-    //   status: 1
-    // })
-    // .then(function (response) {
-    //   console.log(response);
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    // });
+    axios.post('/verify', {
+      id: 2121,
+      status: 1
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   //更新上下架
@@ -5967,26 +5966,6 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
 
 
-  // const renderTagListA = () => {
-  //   return dataSource.tagsA.map((place: Object) => (
-  //     <div style={{'float':'left'}}>
-  //       <span style={{color:'orange'}}>{place['i']}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-  //       {
-  //         place['data'].map(d=>(
-  //           <SelectableTag
-  //             key={d}
-  //             checked={tagAValue === d}
-  //             onChange={() => onTagAValueChange(d)}
-  //             {...props}
-  //           >{d}
-  //           </SelectableTag>
-  //         ))
-  //       }
-        
-  //     </div>
-  //   ));
-  // };
-
   const renderTagListB = () => {
     return dataSource.tagsB.map((name: string) => (
       <SelectableTag
@@ -6001,10 +5980,10 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
 
 
-  //普通用户提交招商信息
+  //普通用户提交招标信息
   const submit = async () => {
-    axios.post('/user/applyZhaoshang', {
-      id: window.localStorage.getItem('id'),
+    axios.post('/user/applyZhaobiao', {
+    //   id: window.localStorage.getItem('id'),
       data:newInfoField.getValues()
     })
     .then(function (response) {
@@ -6024,8 +6003,8 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
   //管理员
   const submitManager = async () => {
-    axios.post('/manage/applyZhaoshang', {
-      id: window.localStorage.getItem('id'),
+    axios.post('/manage/applyZhaobiao', {
+    //   id: window.localStorage.getItem('id'),
       data:newInfoField.getValues()
     })
     .then(function (response) {
@@ -6067,7 +6046,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     else{
       axios.post('/user/join', {
         id: window.sessionStorage.getItem('id'),
-        telephone:field.getValues()?.telphone,
+        telephone:field.getValues()?.tel,
         email: field.getValues()?.email
       })
       .then(function (response) {
@@ -6141,17 +6120,17 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     else {
       return(
         <div>
-          <Button type="primary" onClick={openJoinDialog}>参与招商</Button>
+          <Button type="primary" onClick={openJoinDialog}>参与招标</Button>
           <Dialog
                 visible={joinVisible}
-                title="申请参与招商"
+                title="申请参与招标"
                 style={{ width: '500px' }}
                 onOk={submitJoin}
                 onCancel={closeJoin}
               >
                 <Form field={field} fullWidth style={{ paddingLeft: 40, paddingRight: 40 }}>
                   <Form.Item format="tel" formatMessage="请输入正确的电话号码" label="电话号码" required requiredMessage="请输入电话">
-                    <Input name="telphone" placeholder="请输入电话号码" />
+                    <Input name="tel" placeholder="请输入电话号码" />
                   </Form.Item>
                   <Form.Item format="email"  formatMessage="请输入正确的邮箱" label="邮箱" required requiredMessage="请输入邮箱">
                     <Input name="email" placeholder="请输入邮箱" />
@@ -6175,13 +6154,13 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                 {c.title}
               </div>
               <div className={styles.content}>
-                招商简介：{c.content}
+                招标简介：{c.content}
               </div>
               <div className={styles.subContent}>
                 邮箱：{c.email}
               </div>
               <div className={styles.subContent}>
-                电话号码：{c.telphone}
+                电话号码：{c.tel}
               </div>
               <div className={styles.subContent}>
                 发布时间: {c.date}
@@ -6227,10 +6206,10 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             <div className={styles.ListItem}>
               <div className={styles.add}>
                 <Icon type="add" className={styles.icon} size="xs" />
-                <div className={styles.addText} onClick={openDialog}>发布招商信息</div>
+                <div className={styles.addText} onClick={openDialog}>发布招标信息</div>
                   <Dialog
                     visible={visible}
-                    title="招商信息发布"
+                    title="招标信息发布"
                     style={{ width: '500px' }}
                     onOk={submitManager}
                     onCancel={close}
@@ -6249,7 +6228,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                         <Input name="email" placeholder="请输入邮箱" />
                       </Form.Item>
                       <Form.Item format="tel" formatMessage="请输入正确的电话号码" label="电话号码" required requiredMessage="请输入电话">
-                        <Input name="telphone" placeholder="请输入电话号码" />
+                        <Input name="tel" placeholder="请输入电话号码" />
                       </Form.Item>
                       <Form.Item label="图片" requiredMessage="请上传图片">
                         <Upload
@@ -6271,7 +6250,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             {renderCards()}
             <Box margin={[15, 0, 0, 0]} direction="row" align="center" justify="space-between">
               <div className={styles.total}>
-                共<span>200</span>条招商信息
+                共<span>200</span>条招标信息
               </div>
               <Pagination onChange={onPaginationChange} />
             </Box>
@@ -6306,10 +6285,10 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             <div className={styles.ListItem}>
               <div className={styles.add}>
                 <Icon type="add" className={styles.icon} size="xs" />
-                <div className={styles.addText} onClick={openDialog}>发布招商信息</div>
+                <div className={styles.addText} onClick={openDialog}>发布招标信息</div>
                   <Dialog
                     visible={visible}
-                    title="招商信息发布"
+                    title="招标信息发布"
                     style={{ width: '500px' }}
                     onOk={submit}
                     onCancel={close}
@@ -6328,7 +6307,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                         <Input name="email" placeholder="请输入邮箱" />
                       </Form.Item>
                       <Form.Item format="tel" formatMessage="请输入正确的电话号码" label="电话号码" required requiredMessage="请输入电话">
-                        <Input name="telphone" placeholder="请输入电话号码" />
+                        <Input name="tel" placeholder="请输入电话号码" />
                       </Form.Item>
                       <Form.Item label="图片" requiredMessage="请上传图片">
                         <Upload
@@ -6349,7 +6328,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             {renderCards()}
             <Box margin={[15, 0, 0, 0]} direction="row" align="center" justify="space-between">
               <div className={styles.total}>
-                共<span>200</span>条招商信息
+                共<span>200</span>条招标信息
               </div>
               <Pagination onChange={onPaginationChange} />
             </Box>

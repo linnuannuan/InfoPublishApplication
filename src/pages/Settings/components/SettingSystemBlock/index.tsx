@@ -7,86 +7,91 @@ const Option = Select.Option;
 const { Cell } = ResponsiveGrid;
 const FormItem = Form.Item;
 
-const userType = window.localStorage.getItem('type')
+const userType = 'manager'
+// const userType = window.localStorage.getItem('type')
 
 const MockData = [
   {
     id:1,
-    name: '阿不思·布萊恩·鄧不利多',
-    logo: 'https://img.alicdn.com/tfs/TB1WsE2n5_1gK0jSZFqXXcpaXXa-183-183.png',
-    type: '正式',//  体验/正式
+    applyUserName: '阿不思·布萊恩·鄧不利多',
+    vipType: '正式',//  体验/正式
     //发起申请时间
-    time:'2020-10-28',
+    applyTime:'2020-10-28',
+    verifyFlag:1
     //会员时长
     // period:'12个月'c
   },
   {
     id:2,
-    name: '戒钱',
-    logo: 'https://img.alicdn.com/tfs/TB1cjwYnVT7gK0jSZFpXXaTkpXa-183-183.png',
-    type: '体验',//  体验/正式
+    applyUserName: '戒钱',
+    vipType: '体验',//  体验/正式
     //发起申请时间
-    time:'2020-10-28',
+    applyTime:'2020-10-28',
+    verifyFlag:0
+
     //会员时长
     // period:'3天'
   },
   {
     id:3,
-    name: '格林德沃',
-    logo: 'https://img.alicdn.com/tfs/TB1l7g0nYr1gK0jSZR0XXbP8XXa-183-183.png',
-    type: '体验',//  体验/正式
+    applyUserName: '格林德沃',
+    vipType: '体验',//  体验/正式
     //发起申请时间
-    time:'2020-10-28',
+    applyTime:'2020-10-28',
+    verifyFlag:1
+
     //会员时长
     // period:'15天'
   },
   {
     id:4,
-    name: '哈利玻特',
-    logo: 'https://img.alicdn.com/tfs/TB1WUurnubviK0jSZFNXXaApXXa-183-183.png',
-    type: '体验',//  体验/正式
+    applyUserName: '哈利玻特',
+    vipType: '体验',//  体验/正式
     //发起申请时间
-    time:'2020-10-28',
+    applyTime:'2020-10-28',
+    verifyFlag:0
+
     //会员时长
     // period:'3个月'
   },
   {
     id:5,
-    name: '小天狼星',
-    logo: 'https://img.alicdn.com/tfs/TB10Ts2n1L2gK0jSZFmXXc7iXXa-183-183.png',
-    type: '体验',//  体验/正式
+    applyUserName: '小天狼星',
+    vipType: '体验',//  体验/正式
     //发起申请时间
-    time:'2020-10-28',
+    applyTime:'2020-10-28',
+    verifyFlag:1
     //会员时长
     // period:'3个月'
   },
   {
     id:6,
-    name: '罗恩',
-    logo: 'https://img.alicdn.com/tfs/TB1HHwYnVY7gK0jSZKzXXaikpXa-183-183.png',
-    type: '体验',//  体验/正式
+    applyUserName: '罗恩',
+    vipType: '体验',//  体验/正式
     //发起申请时间
-    time:'2020-10-28',
+    applyTime:'2020-10-28',
+    verifyFlag:0
+
     //会员时长
     // period:'3个月'
   },
   {
     id:7,
-    name: '伏地魔',
-    logo: 'https://img.alicdn.com/tfs/TB1T_WrnubviK0jSZFNXXaApXXa-183-183.png',
-    type: '体验',//  体验/正式
+    applyUserName: '伏地魔',
+    vipType: '体验',//  体验/正式
     //发起申请时间
-    time:'2020-10-28',
+    applyTime:'2020-10-28',
+    verifyFlag:1,
     //会员时长
     period:'3个月'
   },
   {
     id:8,
-    name: '赫敏',
-    logo: 'https://img.alicdn.com/tfs/TB1D_GrnubviK0jSZFNXXaApXXa-183-183.png',
-    type: '体验',//  体验/正式
+    applyUserName: '赫敏',
+    vipType: '体验',//  体验/正式
     //发起申请时间
-    time:'2020-10-28',
+    applyTime:'2020-10-28',
+    verifyFlag:1,
     //会员时长
     period:'3个月'
   },
@@ -151,7 +156,7 @@ export interface SettingData {
   vipCount?: number;
   vipUnit?: string;
   vipMaxNum?: number;
-  vipStatus?: boolean;
+  vipStatus?: number;
 }
 
 export interface SettingSystemProps {
@@ -166,7 +171,7 @@ const DEFAULT_DATA: SettingData = {
   tvipCount: 11,
   tvipUnit: 'day',
   vipMaxNum:10,
-  vipStatus:false
+  vipStatus:0
 }
 
 
@@ -199,14 +204,45 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
   }, [inited]);
 
 
+  //查询vip申请
+  const refreshVipData=()=>{
+    axios.get('/manage/vipApply')
+    .then(function (response) {
+      setVipList(response.data.vipApplyList);
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  refreshVipData()
+
+  const refreshJoinData=()=>{
+    axios.get('/manage/joinList')
+    .then(function (response) {
+      setApplyData(response.data.joinList);
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  refreshJoinData()
+
+
+
   const formChange = (values: SettingSystemProps): void => {
     setValue(values);
   };
 
-  //审核通过
-  const handleSubmit =(id)=>{
-    axios.post('/settingTime', 
-      id
+  //vip审核通过
+  const handleSubmit =(id,role)=>{
+    axios.post('/dealVipApply', 
+      {
+        flag:1,
+        role:role,
+        id:id,
+      }
     )
     .then(function (response) {
       console.log(response);
@@ -216,10 +252,13 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
     });
   }
 
-  //确定设置数值
-  const submitBasic =()=>{
-    axios.post('/settingData', 
-      postData
+  const handleReject =(id,role)=>{
+    axios.post('/dealVipApply', 
+      {
+        flag:2,
+        role:role,
+        id:id,
+      }
     )
     .then(function (response) {
       console.log(response);
@@ -228,6 +267,64 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       console.log(error);
     });
   }
+
+
+
+  //确定设置数值
+  const submitBasic =()=>{
+    axios.post('/manage/vipOpenSetting', 
+      {
+        flag:postData.vipStatus
+      }
+    )
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+
+    axios.post('/manage/vipOpenDaysSetting', 
+      {
+        days: postData.tvipCount,
+        unit: postData.tvipUnit,
+      }
+    )
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+    axios.post('/manage/vipOpenMonthsSetting', 
+      {
+        month: postData.vipCount,
+        unit: postData.vipUnit,
+      }
+    )
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+
+    axios.post('/manage/InfoUpNumSetting', 
+      {
+        num: postData.vipMaxNum
+      }
+    )
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
 
 
   if(userType != 'manager'){
@@ -283,8 +380,8 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
                   </FormItem>
                   <FormItem colSpan={12} label="VIP板块开启状态" >
                     <Radio.Group name="vipStatus">
-                      <Radio id="open" value={true}>开启</Radio>
-                      <Radio id="close" value={false}>关闭</Radio>
+                      <Radio id="open" value={1}>开启</Radio>
+                      <Radio id="close" value={0}>关闭</Radio>
                     </Radio.Group>
                   </FormItem>
 
@@ -317,41 +414,26 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
             />
             <Card.Content>
               <Table dataSource={vipList}  hasBorder={false}>
-                <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} />
+                {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
                 <Table.Column dataIndex="id" title="序号" />
-                <Table.Column dataIndex="name" title="姓名"/>
-                <Table.Column dataIndex="type" title="会员类型"/>
+                <Table.Column dataIndex="applyUserId" title="用户ID" />
+                <Table.Column dataIndex="applyUserName" title="姓名"/>
+                <Table.Column dataIndex="vipType" title="会员类型"/>
                 {/* <Table.Column dataIndex="period" /> */}
-                <Table.Column dataIndex="time"  title="申请时间"/>
-                <Table.Column cell={(value,index,record) => <Button onClick={handleSubmit.bind(this, record.id)}>审核通过</Button>}></Table.Column>
-                {/* <Table.Column cell={(value,index,record) => 
-                  <Form
-                    // className={styles.baseSetting}
-                    value={postData[index]}
-                    inline
-                    onChange={formChange}
-                    // responsive
-                  >
-                    <FormItem >
-                      <NumberPicker name="count" type="inline" step={1} min={0} max={30} defaultValue={0} ></NumberPicker>
-                    </FormItem>
-                    <FormItem >
-                      <Select
-                          name="unit"
-                          defaultValue="day"
-                          aria-label="unit is"
-                      >
-                        <Option value="day">天</Option>
-                        <Option value="month">月</Option>
-                        <Option value="year">年</Option>
-                      </Select>
-                    </FormItem>
-                    <FormItem label=" ">
-                      <Form.Submit onClick={handleSubmit.bind(this, record.id)}>设置</Form.Submit> 
-                      <Form.Submit onClick={handleSubmit.bind(this, record.id)}>设置</Form.Submit>
-                  </FormItem>
-                  </Form>
-                } /> */}
+                <Table.Column dataIndex="applyTime"  title="申请时间"/>
+                <Table.Column cell={(value,index,record) => {
+                    if(record.verifyFlag){
+                      return <>
+                                <Button type="secondary" onClick={handleSubmit.bind(this, record.id,record.vipType)}>通过</Button>
+                                <Button onClick={handleReject.bind(this, record.id,record.vipType)}>拒绝</Button>
+                            </>
+                    }
+                    else{
+                      return <Button disabled>已审核</Button>
+                    }
+                  }}>
+
+                </Table.Column>
                   
                   
               </Table>
@@ -378,37 +460,17 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
                 <Table.Column title="电话号码" dataIndex="telephone" />
                 {/* <Table.Column dataIndex="period" /> */}
                 <Table.Column title="申请时间" dataIndex="time" />
-                {/* <Table.Column cell={(value,index,record) => <Button onClick={handleSubmit.bind(this, record.id)}>已促成</Button>}></Table.Column> */}
-                {/* <Table.Column cell={(value,index,record) => 
-                  <Form
-                    // className={styles.baseSetting}
-                    value={postData[index]}
-                    inline
-                    onChange={formChange}
-                    // responsive
-                  >
-                    <FormItem >
-                      <NumberPicker name="count" type="inline" step={1} min={0} max={30} defaultValue={0} ></NumberPicker>
-                    </FormItem>
-                    <FormItem >
-                      <Select
-                          name="unit"
-                          defaultValue="day"
-                          aria-label="unit is"
-                      >
-                        <Option value="day">天</Option>
-                        <Option value="month">月</Option>
-                        <Option value="year">年</Option>
-                      </Select>
-                    </FormItem>
-                    <FormItem label=" ">
-                      <Form.Submit onClick={handleSubmit.bind(this, record.id)}>设置</Form.Submit> 
-                      <Form.Submit onClick={handleSubmit.bind(this, record.id)}>设置</Form.Submit>
-                  </FormItem>
-                  </Form>
-                } /> */}
-                  
-                  
+                <Table.Column cell={(value,index,record) => {
+                    if(record.dealFlag){
+                      return <>
+                                <Button type="secondary" onClick={handleSubmit.bind(this, record.id)}>已促成</Button>
+                             </>
+                    }
+                    else{
+                      return <Button disabled>已促成</Button>
+                    }
+                }}></Table.Column>
+                    
               </Table>
             </Card.Content>
           </Card>
