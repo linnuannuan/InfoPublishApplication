@@ -6138,17 +6138,17 @@ const applyVIP=()=>{
     if(userType == 'manager'){
       if(!valid){
         return(
-          <Button type="normal" onClick={updateVerify(id,1)}>审核通过</Button>
+          <Button type="normal" onClick={updateVerify.bind(id,1)}>审核通过</Button>
         )  
       }
       else if (verify){
         return(
-          <Button type="secondary" onClick={updateValid(id,0)}>下架信息</Button>
+          <Button type="secondary" onClick={updateValid.bind(id,0)}>下架信息</Button>
         )  
       }
       else if (!verify){
         return(
-          <Button type="primary" onClick={updateValid(id,1)}>上架信息</Button>
+          <Button type="primary" onClick={updateValid.bind(id,1)}>上架信息</Button>
         )  
       }
       

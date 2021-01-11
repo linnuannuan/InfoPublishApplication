@@ -11,7 +11,7 @@ const { Group: TagGroup, Selectable: SelectableTag } = Tag;
 
 // const userType = sessionStorage.SPRING_SECURITY_CONTEXT.authentication.principal.roleList.indexOf("ADMIN")>-1 ? 'manager':(sessionStorage.SPRING_SECURITY_CONTEXT.authentication.principal.roleList.indexOf("VIP")>-1?'vip':'user')
 const userType = 'manager'
-
+const url = (userType=='manager'?'/manage':'user')
 
 export interface ICardItem {
   id?:string;
@@ -22,7 +22,7 @@ export interface ICardItem {
   email?: string;
   date?: string;
   verify?:number;
-  valid?:number
+  validFlag?:number
 }
 export interface InvestInfo {
   title:string,
@@ -39,7 +39,6 @@ export interface DataSource {
   tagA: object;
   tagsB: string[];
   tagB: string;
-  place:string,
   addressDataSource:Object;
 }
 
@@ -50,12 +49,8 @@ export interface ApplyInfo {
 
 
 
-
-
-
-
 // 用户数据
-const DEFAULT_DATA: DataSource = {
+var DEFAULT_DATA: DataSource = {
   tagsA: [{
     "children": [{
         "value": "2974",
@@ -5752,7 +5747,8 @@ const DEFAULT_DATA: DataSource = {
     "label": "台湾"
   }],
   tagA:{ "value": "4212", "label": "未央区" },
-  tagsB: ['全部','未审核','已审核', '已上架', '未上架'],
+//   tagsB: ['全部','未审核','已审核', '已上架', '未上架'],
+  tagsB: ['全部', '已上架', '未上架'],
   tagB: '全部',
   addressDataSource:[],
   cards: [
@@ -5764,7 +5760,7 @@ const DEFAULT_DATA: DataSource = {
       email:'dadas@mail.com',
       date:'2020-12-22',
       verify:0,
-      valid:0
+      validFlag:0
     },
     {
       id:'2',
@@ -5775,7 +5771,7 @@ const DEFAULT_DATA: DataSource = {
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
       verify:1,
-      valid:0
+      validFlag:0
     },
     {
       id:'3',
@@ -5786,7 +5782,7 @@ const DEFAULT_DATA: DataSource = {
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
       verify:0,
-      valid:1
+      validFlag:1
     },
     {
       id:'4',
@@ -5797,7 +5793,7 @@ const DEFAULT_DATA: DataSource = {
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
       verify:1,
-      valid:1
+      validFlag:1
     },
     {
       id:'5',
@@ -5808,13 +5804,10 @@ const DEFAULT_DATA: DataSource = {
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
       verify:0,
-      valid:0
+      validFlag:0
     },
   ]
 };
-
-
-
 
 
 const INPUT_DATA: InvestInfo={
@@ -5831,12 +5824,13 @@ const APPLY_DATA: ApplyInfo={
 }
 
 
+var init = false
 const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProps): JSX.Element => {
   const {
     dataSource = DEFAULT_DATA,
     applyInfo = APPLY_DATA,
     onSearch = (): void => { },
-    investInfo = INPUT_DATA
+    investInfo = INPUT_DATA,
   } = props;
 
   // const [tagAValue, setTagAValue] = useState(dataSource.tagA);
@@ -5847,6 +5841,10 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
   var [visible, setVisible] = useState(false)
   var [joinVisible, setJoinVisible] = useState(false)
+  
+  var [total, setTotal] = useState(1)
+  var [pageSize, setPageSize] = useState(1)
+
 
   const field = Field.useField({
     values: applyInfo,
@@ -5857,25 +5855,32 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
   });
 
   useEffect(() => {
-    axios.post('/user/zhaoShangApply')
-    .then(function (response) {
-        setCardValue(response)
-        
-        setLoading(false);
-        console.log(response);
-    })
-    .catch(function (error) {
-     console.log(error);
-    });
-
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   });
+  
+  console.log('render')
+
+  if(!init){
+    axios.post(url+'/joinList')
+            .then(function (response) {
+                setCardValue(response.data.list);
+                setTotal(response.data.total)
+                setPageSize(response.data.pageSize)
+                setLoading(false);
+                console.log(response);
+            })
+            .catch(function (error) {
+            console.log(error);
+            });
+            
+    init=true
+  }
 
   const onTagAValueChange = (value, data, extra) => {
     setLoading(true);
-    axios.post('/user/zhaoShangApply', 
+    axios.post('/user/joinList', 
     {
         address:{
             province: extra.selectedPath[0]?.label,
@@ -5885,11 +5890,15 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     }
     )
     .then(function (response) {
-      setCardValue(response)
-      console.log(response);
+        setCardValue(response.data.list);
+        setTotal(response.data.total)
+        setPageSize(response.data.pageSize)
+        setPageSize(response.data.pageSize)
+        setLoading(false);
+        console.log(response);
     })
     .catch(function (error) {
-      console.log(error);
+    console.log(error);
     });
   };
   
@@ -5899,40 +5908,58 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
   const onTagBValueChange = (v: string) => {
     setLoading(true);
     setTagBValue(v);
+    axios.post(url+'/joinList', {
+        validFlag: v,
+      })
+      .then(function (response) {
+        setCardValue(response.data.list);
+        setTotal(response.data.total)
+        setPageSize(response.data.pageSize)
+        setLoading(false);
+        console.log(response);
+    })
+    .catch(function (error) {
+    console.log(error);
+    });
   };
 
   const onSearchClick = (value) => {
     setLoading(true);
-
     console.log(value)
-
-    axios.post('/user/zhaoShangApply', {
+    axios.post(url+'/joinList', {
       title: value,
     })
     .then(function (response) {
-      setCardValue(response)
-      console.log(response);
+        setCardValue(response.data.list);
+        setTotal(response.data.total)
+        setPageSize(response.data.pageSize)
+        setLoading(false);
+        console.log(response);
     })
     .catch(function (error) {
-      console.log(error);
+    console.log(error);
     });
   
     onSearch();
   };
 
   const onPaginationChange = (value) => {
-    axios.post('/user/zhaoShangApply', {
-      pageNum: value,
+    setLoading(true);
+    axios.post(url+'/joinList', {
+      total: value,
     })
     .then(function (response) {
-      setCardValue(response)
-      console.log(response);
+        setCardValue(response.data.list);
+        setTotal(response.data.total)
+        setPageSize(response.data.pageSize)
+        setLoading(false);
+        console.log(response);
     })
     .catch(function (error) {
-      console.log(error);
+    console.log(error);
     });
 
-    setLoading(true);
+    
   };
 
   //更新审核
@@ -5951,7 +5978,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
    //更新上下架  1/0
    const updateValid =(id,status)=>{
-    axios.post('/manage/validZhaoshangApply', {
+    axios.post('/manage/validFlagZhaoshangApply', {
       id: id,
       flag: status
     })
@@ -5962,28 +5989,6 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
       console.log(error);
     });
   }
-
-
-
-  // const renderTagListA = () => {
-  //   return dataSource.tagsA.map((place: Object) => (
-  //     <div style={{'float':'left'}}>
-  //       <span style={{color:'orange'}}>{place['i']}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-  //       {
-  //         place['data'].map(d=>(
-  //           <SelectableTag
-  //             key={d}
-  //             checked={tagAValue === d}
-  //             onChange={() => onTagAValueChange(d)}
-  //             {...props}
-  //           >{d}
-  //           </SelectableTag>
-  //         ))
-  //       }
-        
-  //     </div>
-  //   ));
-  // };
 
   const renderTagListB = () => {
     return dataSource.tagsB.map((name: string) => (
@@ -6001,7 +6006,8 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
   //普通用户提交加盟信息
   const submit = async () => {
-    axios.post('/user/applyZhaoshang', {
+      
+    axios.post(url+'/applyJoin', {
       id: window.localStorage.getItem('id'),
       data:newInfoField.getValues()
     })
@@ -6022,7 +6028,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
   //管理员
   const submitManager = async () => {
-    axios.post('/manage/applyZhaoshang', {
+    axios.post(url+'/applyJoin', {
       id: window.localStorage.getItem('id'),
       data:newInfoField.getValues()
     })
@@ -6117,21 +6123,21 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     })
   }
 
-  const renderOptions =(id, valid, verify)=>{
+  const renderOptions =(id, validFlag, verify)=>{
     if(userType == 'manager'){
-      if(!valid){
+    //   if(!validFlag){
+    //     return(
+    //       <Button type="normal" onClick={updateVerify.bind(id,1)}>审核通过</Button>
+    //     )  
+    //   }
+      if (verify){
         return(
-          <Button type="normal" onClick={updateVerify(id,1)}>审核通过</Button>
-        )  
-      }
-      else if (verify){
-        return(
-          <Button type="secondary" onClick={updateValid(id,0)}>下架信息</Button>
+          <Button type="secondary" onClick={updateValid.bind(id,0)}>下架信息</Button>
         )  
       }
       else if (!verify){
         return(
-          <Button type="primary" onClick={updateValid(id,1)}>上架信息</Button>
+          <Button type="primary" onClick={updateValid.bind(id,1)}>上架信息</Button>
         )  
       }
       
@@ -6191,7 +6197,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             </div>
           </div>
           <div className={styles.right}>
-            {renderOptions(c.id,c.valid,c.verify)}
+            {renderOptions(c.id,c.validFlag,c.verify)}
           </div>
         </div>
       </div>
@@ -6207,7 +6213,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
           <div className={styles.TagBoxItem}>
             
             <Typography.Text className={styles.TagTitleName}>地区</Typography.Text>
-            <CascaderSelect style={{ width: '302px' }} dataSource={dataSource.tagsA} onChange={onTagAValueChange} />;
+            <CascaderSelect style={{ width: '302px' }} dataSource={dataSource.tagsA} onChange={onTagAValueChange} />
             {/* <TagGroup>{renderTagListA()}</TagGroup> */}
           </div>
           {/* <div className={styles.TagBoxItem}>
@@ -6347,9 +6353,9 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             {renderCards()}
             <Box margin={[15, 0, 0, 0]} direction="row" align="center" justify="space-between">
               <div className={styles.total}>
-                共<span>200</span>条加盟信息
+                共<span></span>条加盟信息
               </div>
-              <Pagination onChange={onPaginationChange} />
+              <Pagination onChange={onPaginationChange} total={total} pageSize={pageSize}/>
             </Box>
           </Box>
         </Loading>
