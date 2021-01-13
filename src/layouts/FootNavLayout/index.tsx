@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shell, ConfigProvider, Menu, Button, Nav} from '@alifd/next';
+import { Shell, ConfigProvider, Menu, Button } from '@alifd/next';
 import PageNav from './components/PageNav';
 import GlobalSearch from './components/GlobalSearch';
 import Notice from './components/Notice';
@@ -8,14 +8,9 @@ import HeaderAvatar from './components/HeaderAvatar';
 import Logo from './components/Logo';
 import Footer from './components/Footer';
 import PhoneNav from './components/PhoneNav';
-import { TabBar,ListView } from 'antd-mobile';
-import { asideMenuConfig } from '../BasicLayout/menuConfig';
+import { TabBar,Icon } from '@ant-design/react-native';
 
-import { Link } from 'ice';
-
-// import styles from './index.module.scss';
-
-import { render } from 'react-dom';
+import styles from './index.module.scss';
 
 //
 
@@ -66,8 +61,6 @@ export default function BasicLayout({
     }
   };
   const [device, setDevice] = useState(getDevice(NaN));
-  const [selectedTab, setSelectedTab] = useState('index')
-  const fullScreen =true
 
 
   if (typeof window !== 'undefined') {
@@ -95,7 +88,6 @@ export default function BasicLayout({
   }
 
 
-
   if(device == 'phone'){
     return (
     <ConfigProvider device={device}>
@@ -117,48 +109,35 @@ export default function BasicLayout({
         {/* <SolutionLink /> */}
         <HeaderAvatar />
       </Shell.Action>
+      <Shell.AppBar style={{'background':'transparent', 'marginTop':'10px'}}>
+        <div style={{width:"100%"}}>
+          <div className={styles.appBar} onClick={turnVip}>
+            <img src="../public/vip.svg" alt="VIP" width="50%"></img>
+            <div>VIP</div>
+          </div>
+          <div className={styles.appBar} onClick={turnJoin}> 
+            <img src="../public/加盟.svg" alt="加盟" width="50%"></img>
+            <div>加盟</div>
+          </div>
+          <div className={styles.appBar} onClick={turnZhaoshang}>
+            <img src="../public/招商部.svg" alt="招商" width="50%"></img>
+            <div>招商</div>
+          </div>
+          <div className={styles.appBar} onClick={turnZhaobiao}>
+            <img src="../public/转让标签.svg" alt="转让" width="50%"></img>
+            <div>转让</div>
+          </div>
+        </div>
+        
+      </Shell.AppBar>
 
       <Shell.Content>
       {children}
-      </Shell.Content>    
+      </Shell.Content>
       <Shell.Footer>
         <Footer />
-      </Shell.Footer>
-      <Shell.Navigation
-      >
-        {/* <div style={{width:"100%"}}>
-      <div className={styles.appBar} onClick={turnVip}>
-        <img src="../public/vip.svg" alt="VIP" width="50%"></img>
-        <div>VIP</div>
-      </div>
-      <div className={styles.appBar} onClick={turnJoin}> 
-        <img src="../public/加盟.svg" alt="加盟" width="50%"></img>
-        <div>加盟</div>
-      </div>
-      <div className={styles.appBar} onClick={turnZhaoshang}>
-        <img src="../public/招商部.svg" alt="招商" width="50%"></img>
-        <div>招商</div>
-      </div>
-      <div className={styles.appBar} onClick={turnZhaobiao}>
-        <img src="../public/转让标签.svg" alt="转让" width="50%"></img>
-        <div>转让</div>
-      </div>
-    </div> */}
         
-      <Nav embeddable aria-label="global navigation">
-       {
-          asideMenuConfig.map(item=>{
-              return <Nav.Item key={item.path}>
-                    <Link to={item.path}>
-                      {item.name}
-                    </Link>
-                  </Nav.Item>
-
-          })
-        }
-        </Nav>
-    </Shell.Navigation>
-    
+      </Shell.Footer>
     </Shell>
   </ConfigProvider>)
 
@@ -200,12 +179,49 @@ export default function BasicLayout({
         {children}
         </Shell.Content>
         <Shell.Footer>
-          <Footer />
+          {/* <Footer /> */}
+          <TabBar
+            unselectedTintColor="#949494"
+            tintColor="#33A3F4"
+            barTintColor="#f5f5f5"
+          >
+                <TabBar.Item
+                  title="Life"
+                  icon={<Icon name="home" />}
+                  selected={this.state.selectedTab === 'blueTab'}
+                  onPress={() => this.onChangeTab('blueTab')}
+                >
+                  {this.renderContent('Life Tab')}
+                </TabBar.Item>
+                <TabBar.Item
+                  icon={<Icon name="ordered-list" />}
+                  title="Koubei"
+                  badge={2}
+                  selected={this.state.selectedTab === 'redTab'}
+                  onPress={() => this.onChangeTab('redTab')}
+                >
+                  {this.renderContent('Koubei Tab')}
+                </TabBar.Item>
+                <TabBar.Item
+                  icon={<Icon name="like" />}
+                  title="Friend"
+                  selected={this.state.selectedTab === 'greenTab'}
+                  onPress={() => this.onChangeTab('greenTab')}
+                >
+                  {this.renderContent('Friend Tab')}
+                </TabBar.Item>
+                <TabBar.Item
+                  icon={<Icon name="user" />}
+                  title="My"
+                  selected={this.state.selectedTab === 'yellowTab'}
+                  onPress={() => this.onChangeTab('yellowTab')}
+                >
+                  {this.renderContent('My Tab')}
+                </TabBar.Item>
+              </TabBar>
         </Shell.Footer>
       </Shell>
     </ConfigProvider>
   );
 
 }
-
-import styles from './index.module.scss';

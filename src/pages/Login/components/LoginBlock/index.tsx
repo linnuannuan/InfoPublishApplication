@@ -88,6 +88,8 @@ const LoginBlock: React.FunctionComponent<LoginProps> = (
             case error.POSITION_UNAVAILABLE:
                 Message.error("位置信息是不可用的")
                 // alert("位置信息是不可用的");
+
+
                 break;
             case error.TIMEOUT:
                 Message.error("请求您的地理位置超时")
@@ -122,36 +124,55 @@ const LoginBlock: React.FunctionComponent<LoginProps> = (
     }
     console.log('values:', values);
 
-
-    let storage = window.sessionStorage
     values.longitude = address.longitude
     values.latitude = address.latitude
 
     axios.post('/login', {
-        values      })
+        username:values.username,
+        password:values.password,
+        autoLogin:values.autoLogin,
+        phone:values.phone,
+        code:values.code,
+        longitude: values.longitude,
+        latitude : values.latitude
+      })
       .then(function (response) {
         console.log(response);
-        Message.success('登录成功');
+
+        if(response.status == 200){
+          Message.success('登录成功');
+          //跳转至首页
+          window.location.href="/index";
+        }
+        if(response.status == 401){
+          Message.error('密码错误');
+        }
 
         //存cookie 用户名 类型 密码
-        
-        storage.setItem('name', 'Tom');
-        storage.setItem('type','')
       })
       .catch(function (error) {
-        console.log(error);
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log('error.response')
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+          if(error.response.status == 401){
+            Message.error('密码错误')
+          }
+
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log('error.request',error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
     });
 
-    
-    // var setCookie = cookie.serialize('name','')
-    storage.setItem('name', 'Tom');
-    storage.setItem('type','manager');
-    
-    storage.setItem('id','111')
-    
-  
-    //跳转至首页
-    window.location.href="/index";
   };
 
   // const phoneForm = (

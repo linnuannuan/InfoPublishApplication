@@ -76,8 +76,6 @@ export default function ResetBlock() {
 
 
 
-
-
   const handleSubmit = (values: ResetProps, errors: []) => {
 
     axios.post('/resetPassword',values)

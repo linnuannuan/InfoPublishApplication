@@ -85,11 +85,13 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
   } = props;
 
   const [vipList, setVipList] = useState([]);
-
   const [joinList, setJoinList] = useState([]);
   const [investList, setInvestList] = useState([]);
   const [zhaobiaoList, setZhaobiaoList] = useState([]);
+  const [vipStatus,setVipStatus]= useState(false)
 
+  
+  const [joinStatus, setJoinStatus] = useState([]);
   const [inited, setInited] = useState(false);
 
   useEffect(() => {
@@ -101,43 +103,82 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
   }, [inited]);
 
 
+  const checkLogin=(response)=>{
+    if(response.data.msg == "未登录"){
+        Message.warning("请登录！")
+        window.location.href='/#/user/login';
+        return false
+    }
+    return true
+  }
+
+
   const refreshInitData=()=>{
     //加盟
-    axios.get('/user/joinList')
+    axios.get('/user/joinApplyList')
     .then(function (response) {
-      setJoinList(response.data.joinList);
+      
+      if(checkLogin(response)){
+        setJoinList(response.data.data.joinList);
+      }
       console.log(response);
     })
     .catch(function (error) {
       console.log(error);
     });
     //招商 
-    axios.get('/user/zhaoshangApplyList')
+    axios.get('/user/zhaoShangApplyList')
     .then(function (response) {
-      setInvestList(response.data.joinList);
+      if(checkLogin(response)){
+       setInvestList(response.data.data.zhaoshangApplyList);
+      }
       console.log(response);
     })
     .catch(function (error) {
       console.log(error);
     });
     //转让 
-    axios.get('/user/zhaobiaoList')
+    axios.get('/user/zhaobiaoApplyList')
     .then(function (response) {
-      setZhaobiaoList(response.data.joinList);
+      if(checkLogin(response)){
+        setZhaobiaoList(response.data.data.zhaobiaoList);
+      } 
       console.log(response);
     })
     .catch(function (error) {
       console.log(error);
     });
     //VIP 
-    // axios.get('/user/joinList')
-    // .then(function (response) {
-    //   setJoinList(response.data.joinList);
-    //   console.log(response);
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    // });
+    axios.get('/vip/vipInfoApplyList')
+    .then(function (response) {
+      setVipList(response.data.data.vipInfoList);
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+
+    //VIP开通状态查询 
+    axios.get('user/vipApplyList')
+    .then(function (response) {
+      setVipStatus(response.data.data);
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+    //联系状态查询
+    axios.get('')
+    .then(function (response) {
+      setJoinStatus(response.data.data.vipInfoList);
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
   }
 
 
@@ -155,7 +196,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
                 {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
 
                 <Table.Column dataIndex="id" title="序号" />
-                <Table.Column dataIndex="title" title="标题" />
+                <Table.Column dataIndex="company" title="标题" />
                 <Table.Column dataIndex="content" title="介绍" />
                 <Table.Column dataIndex="address" title="地址" />
                 <Table.Column dataIndex="telephone" title="电话" />
@@ -188,7 +229,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
                 {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
 
                 <Table.Column dataIndex="id" title="序号" />
-                <Table.Column dataIndex="title" title="标题" />
+                <Table.Column dataIndex="company" title="标题" />
                 <Table.Column dataIndex="content" title="介绍" />
                 <Table.Column dataIndex="address" title="地址" />
                 <Table.Column dataIndex="telephone" title="电话" />
@@ -220,7 +261,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
                 {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
 
                 <Table.Column dataIndex="id" title="序号" />
-                <Table.Column dataIndex="title" title="标题" />
+                <Table.Column dataIndex="company" title="标题" />
                 <Table.Column dataIndex="content" title="介绍" />
                 <Table.Column dataIndex="address" title="地址" />
                 <Table.Column dataIndex="telephone" title="电话" />
@@ -252,7 +293,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
                 {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
 
                 <Table.Column dataIndex="id" title="序号" />
-                <Table.Column dataIndex="title" title="标题" />
+                <Table.Column dataIndex="company" title="标题" />
                 <Table.Column dataIndex="content" title="介绍" />
                 <Table.Column dataIndex="address" title="地址" />
                 <Table.Column dataIndex="telephone" title="电话" />
@@ -288,9 +329,9 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
             // }
             />
             <Card.Content>
-              <Table dataSource={joinList} hasBorder={false}>
+              <Table dataSource={joinStatus} hasBorder={false}>
                 <Table.Column title="序号" dataIndex="id" />
-                <Table.Column title="项目名称" dataIndex="title" />
+                <Table.Column title="项目名称" dataIndex="company" />
                 <Table.Column title="邮箱" dataIndex="email" />
                 <Table.Column title="电话号码" dataIndex="telephone" />
                 {/* <Table.Column dataIndex="period" /> */}
@@ -309,7 +350,27 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
             </Card.Content>
           </Card>
         </Tab.Item>
-   
+        <Tab.Item title="VIP申请状态查询" key="help">
+          <Card free contentHeight={600}>
+            <Card.Header
+              title="信息促成"
+            //   extra={
+            //     <Box spacing={10} direction="row">
+            //       <Button type="secondary">设置角色 1 权限</Button>
+            //       <Button type="primary">新增</Button>
+            //     </Box>
+            // }
+            />
+            <Card.Content>
+              <Table dataSource={vipStatus} hasBorder={false}>
+                <Table.Column title="申请类型" dataIndex="vipType" cell= {(value) => {return value==1?<span>正式VIP</span>:<span>体验VIP</span>}}/>
+                <Table.Column title="申请时间" dataIndex="applyTime" />
+                <Table.Column title="审核状态" dataIndex="verifyFlag" cell= {(value) => {return (value== 0?<span>未审核</span>:(value== 1?<span>已通过</span>:<span>已拒绝</span>))}}/>
+                <Table.Column title="审核时间" dataIndex="verifyTime" />                    
+              </Table>
+            </Card.Content>
+          </Card>
+        </Tab.Item>
 
       </Tab>
     </div>

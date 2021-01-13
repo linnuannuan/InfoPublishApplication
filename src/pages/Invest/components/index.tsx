@@ -10,9 +10,8 @@ const { Group: TagGroup, Selectable: SelectableTag } = Tag;
 // 0普通用户 1VIP  2管理员manager 
 
 // const userType = sessionStorage.SPRING_SECURITY_CONTEXT.authentication.principal.roleList.indexOf("ADMIN")>-1 ? 'manager':(sessionStorage.SPRING_SECURITY_CONTEXT.authentication.principal.roleList.indexOf("VIP")>-1?'vip':'user')
-// const userType = 'manager'
 const userType = 'user'
-
+const url = (userType=='manager'?'/manage':'/user')
 
 export interface ICardItem {
   id?:string;
@@ -23,16 +22,15 @@ export interface ICardItem {
   email?: string;
   date?: string;
   verify?:number;
-  valid?:number
+  validFlag?:number
 }
 export interface InvestInfo {
   title:string,
   content: string,
   address: string,
-  telphone:string,
+  tel:string,
   email:string,
   filePathArray:Array<String>
-  
 }
 
 export interface DataSource {
@@ -41,23 +39,18 @@ export interface DataSource {
   tagA: object;
   tagsB: string[];
   tagB: string;
-  place:string,
   addressDataSource:Object;
 }
 
 export interface ApplyInfo {
   email: string;
-  telphone: string;
+  tel: string;
 }
 
 
 
-
-
-
-
 // 用户数据
-const DEFAULT_DATA: DataSource = {
+var DEFAULT_DATA: DataSource = {
   tagsA: [{
     "children": [{
         "value": "2974",
@@ -5753,8 +5746,11 @@ const DEFAULT_DATA: DataSource = {
     "value": "4858",
     "label": "台湾"
   }],
-  tagA:{ "value": "4212", "label": "未央区" },
-  tagsB: ['全部','未审核','已审核', '已上架', '未上架'],
+  tagA:{
+      address:{}
+   },
+//   tagsB: ['全部','未审核','已审核', '已上架', '未上架'],
+  tagsB: ['全部', '已上架', '未上架'],
   tagB: '全部',
   addressDataSource:[],
   cards: [
@@ -5762,74 +5758,83 @@ const DEFAULT_DATA: DataSource = {
       id:'1',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       verify:0,
-      valid:0
+      validFlag:0
     },
     {
       id:'2',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
       verify:1,
-      valid:0
+      validFlag:0
     },
     {
       id:'3',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
       verify:0,
-      valid:1
+      validFlag:1
     },
     {
       id:'4',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
       verify:1,
-      valid:1
+      validFlag:1
     },
     {
       id:'5',
       title: '上海一片天餐饮管理股份有限公司',
       content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-      telphone:'15009265712',
+      tel:'15009265712',
       email:'dadas@mail.com',
       date:'2020-12-22',
       // 状态0表示未审核  1表示审核未上架  2表示审核已上架
       verify:0,
-      valid:0
+      validFlag:0
     },
   ]
 };
 
 
-
-
-
 const INPUT_DATA: InvestInfo={
   title:'',
   content: '',
-  telphone:'',
+  tel:'',
   email:'',
   filePathArray:[]
 }
 
 const APPLY_DATA: ApplyInfo={
   email:'',
-  telphone:''
+  tel:''
+}
+
+
+var init = false
+
+const checkLogin=(response)=>{
+    if(response.message == "未登录"){
+        Message.warning("请登录！")
+        window.location.href='/#/user/login';
+        return false
+    }
+    return true
 }
 
 
@@ -5838,17 +5843,24 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     dataSource = DEFAULT_DATA,
     applyInfo = APPLY_DATA,
     onSearch = (): void => { },
-    investInfo = INPUT_DATA
+    investInfo = INPUT_DATA,
   } = props;
 
-  // const [tagAValue, setTagAValue] = useState(dataSource.tagA);
+  const [tagAValue, setTagAValue] = useState(dataSource.tagA);
   const [tagBValue, setTagBValue] = useState(dataSource.tagB);
-  
+  const [title, setTitleValue] = useState("");
+  const [joinId, setJoinId] = useState(0);
+
+
   const [cards, setCardValue] = useState(dataSource.cards);
   const [loading, setLoading] = useState(true);
 
   var [visible, setVisible] = useState(false)
   var [joinVisible, setJoinVisible] = useState(false)
+  
+  var [total, setTotal] = useState(1)
+  var [pageSize, setPageSize] = useState(1)
+
 
   const field = Field.useField({
     values: applyInfo,
@@ -5859,82 +5871,136 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
   });
 
   useEffect(() => {
-    axios.post('/user/zhaoShangApply')
-    .then(function (response) {
-        setCardValue(response)
-        
-        setLoading(false);
-        console.log(response);
-    })
-    .catch(function (error) {
-     console.log(error);
-    });
-
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   });
+  
+  console.log('render')
+
+  const refreshData=()=>{
+    axios.post(url+'/zhaoShangApply')
+    .then(function (response) {
+        if(checkLogin(response)){
+            setCardValue(response.data.list);
+            setTotal(response.data.total)
+            setPageSize(response.data.pageSize)
+            setLoading(false);
+        }
+        console.log(response);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  }
+
+
+
+  if(!init){
+    refreshData()
+    init=true
+  }
 
   const onTagAValueChange = (value, data, extra) => {
     setLoading(true);
-    axios.post('/user/zhaoShangApply', 
+    //保存当前地址信息
+    setTagAValue({
+        province: extra.selectedPath[0]?.label,
+        city:extra.selectedPath[1]?.label,
+        region:extra.selectedPath[2]?.label,
+    });
+
+    axios.post(url+'/zhaoShangApply', 
     {
         address:{
             province: extra.selectedPath[0]?.label,
             city:extra.selectedPath[1]?.label,
             region:extra.selectedPath[2]?.label,
-        }
-    }
-    )
+        },
+        validFlag: tagBValue,
+        title:title
+    })
     .then(function (response) {
-      setCardValue(response)
-      console.log(response);
+        if(checkLogin(response)){
+            setCardValue(response.data.list);
+            setTotal(response.data.total)
+            setPageSize(response.data.pageSize)
+            setLoading(false);
+        }
+        console.log(response);
     })
     .catch(function (error) {
-      console.log(error);
+    console.log(error);
     });
   };
   
-
-
 
   const onTagBValueChange = (v: string) => {
     setLoading(true);
     setTagBValue(v);
+    axios.post(url+'/zhaoShangApply', {
+        address:tagAValue,
+        validFlag: tagBValue,
+        title:title
+      })
+      .then(function (response) {
+        
+        if(checkLogin(response)){
+            setCardValue(response.data.list);
+            setTotal(response.data.total)
+            setPageSize(response.data.pageSize)
+            setLoading(false);
+        }
+        console.log(response);
+    })
+    .catch(function (error) {
+    console.log(error);
+    });
   };
 
   const onSearchClick = (value) => {
     setLoading(true);
-
+    setTitleValue(value)
     console.log(value)
-
-    axios.post('/user/zhaoShangApply', {
+    axios.post(url+'/zhaoShangApply', {
       title: value,
+      address: tagAValue
     })
     .then(function (response) {
-      setCardValue(response)
-      console.log(response);
+        if(checkLogin(response)){
+            setCardValue(response.data.list);
+            setTotal(response.data.total)
+            setPageSize(response.data.pageSize)
+            setLoading(false);
+        }
+        console.log(response);
     })
     .catch(function (error) {
-      console.log(error);
+    console.log(error);
     });
-  
     onSearch();
   };
 
   const onPaginationChange = (value) => {
-    axios.post('/user/zhaoShangApply', {
-      pageNum: value,
+    setLoading(true);
+    axios.post(url+'/zhaoShangApply', {
+        pageNum: value,
+        address:tagAValue,
+        validFlag: tagBValue,
+        title: title,
     })
     .then(function (response) {
-      setCardValue(response)
-      console.log(response);
+        if(checkLogin(response)){
+            setCardValue(response.data.list);
+            setTotal(response.data.total)
+            setPageSize(response.data.pageSize)
+            setLoading(false);
+        }
+        console.log(response);
     })
     .catch(function (error) {
-      console.log(error);
+        console.log(error);
     });
-
-    setLoading(true);
   };
 
   //更新审核
@@ -5951,41 +6017,30 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     // });
   }
 
-  //更新上下架
-  const updateValid =(id,status)=>{
-    // axios.post('/valid', {
-    //   id: 2121,
-    //   status: 0
-    // })
-    // .then(function (response) {
-    //   console.log(response);
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    // });
+   //更新上下架  1/0
+   const updateValid =(id,status)=>{
+    axios.post('/manage/validZhaoshangApply', {
+      id: id,
+      flag: status
+    })
+    .then(function (response) {
+        if(checkLogin(response)){
+            if(response.msg=="sucesss"){
+                Message.success('成功');
+                refreshData()
+                //刷新页面
+                console.log(response);
+              }
+              else{
+                Message.error(response.msg)
+              }
+        }
+    })
+    .catch(function (error) {
+      console.log(error);
+      Message.error('更新失败')
+    });
   }
-
-
-
-  // const renderTagListA = () => {
-  //   return dataSource.tagsA.map((place: Object) => (
-  //     <div style={{'float':'left'}}>
-  //       <span style={{color:'orange'}}>{place['i']}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-  //       {
-  //         place['data'].map(d=>(
-  //           <SelectableTag
-  //             key={d}
-  //             checked={tagAValue === d}
-  //             onChange={() => onTagAValueChange(d)}
-  //             {...props}
-  //           >{d}
-  //           </SelectableTag>
-  //         ))
-  //       }
-        
-  //     </div>
-  //   ));
-  // };
 
   const renderTagListB = () => {
     return dataSource.tagsB.map((name: string) => (
@@ -6003,42 +6058,58 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
   //普通用户提交招商信息
   const submit = async () => {
-    axios.post('/user/applyZhaoshang', {
-      id: window.localStorage.getItem('id'),
-      data:newInfoField.getValues()
+    // newInfoField.getValues()
+      
+    axios.post(url+'/applyZhaoshang', {
+    //   id: window.localStorage.getItem('id'),
+    //   data:newInfoField.getValues()
+      company:newInfoField.getValues().company,
+      address:newInfoField.getValues().address,
+      content:newInfoField.getValues().content,
+      telephone:newInfoField.getValues().tel,
+      email:newInfoField.getValues().email,
+      filePathArray:newInfoField.getValues().filePathArray
     })
     .then(function (response) {
       console.log(response);
-      if(response.data.msg=="sucesss"){
+      if(response.msg=="sucesss"){
         Message.success('已提交，请等待管理员审核');
       }
       else{
-        Message.error('提交失败');
+        Message.error(response.msg);
       }
     })
     .catch(function (error) {
       console.log(error);
+      Message.error("提交失败");
     });
     setVisible(false);
   };
 
   //管理员
   const submitManager = async () => {
-    axios.post('/manage/applyZhaoshang', {
-      id: window.localStorage.getItem('id'),
-      data:newInfoField.getValues()
+    axios.post(url+'/applyZhaoshang', {
+        //   id: window.localStorage.getItem('id'),
+        //   data:newInfoField.getValues()
+          company:newInfoField.getValues().company,
+          address:newInfoField.getValues().address,
+          content:newInfoField.getValues().content,
+          telephone:newInfoField.getValues().tel,
+          email:newInfoField.getValues().email,
+          filePathArray:newInfoField.getValues().filePathArray
     })
     .then(function (response) {
       console.log(response);
-      if(response.data.msg=="sucesss"){
+      if(response.msg=="sucesss"){
         Message.success('已提交');
       }
       else{
-        Message.error('提交失败');
+        Message.error(response.msg);
       }
     })
     .catch(function (error) {
       console.log(error);
+      Message.error("提交失败");
     });
     setVisible(false);
   };
@@ -6053,31 +6124,39 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     // console.log('render')
     setVisible(true)
   };
-  const openJoinDialog =()=>{
+  const openJoinDialog =(id)=>{
     setJoinVisible(true)
+    setJoinId(id)
+    console.log('click id:', id)
   }
 
 
   const submitJoin =()=>{
     setJoinVisible(false)
-    if(!window.sessionStorage.getItem('id')){
-      Message.warning('您尚未登陆，请先登录再操作');
-      window.location.href="/user/login";
-    }
-    else{
+    // if(!window.sessionStorage.getItem('id')){
+    //   Message.warning('您尚未登陆，请先登录再操作');
+    //   window.location.href="/user/login";
+    // }
+    // else{
       axios.post('/user/join', {
-        id: window.sessionStorage.getItem('id'),
-        telephone:field.getValues()?.telphone,
+        id: joinId,
+        telephone:field.getValues()?.tel,
         email: field.getValues()?.email
       })
       .then(function (response) {
         console.log(response);
-        Message.success('已申请，请等待管理员审核');
+        if(response.msg=="sucesss"){
+            Message.success('已申请，请等待管理员审核');
+        }
+        else{
+            Message.error(response.msg);
+        }
       })
       .catch(function (error) {
         console.log(error);
+        Message.error("提交失败");
       });
-    }
+    // }
     // const id = window.localStorage.getItem('id')?
 
   }
@@ -6095,6 +6174,8 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
       if(info[info.length-1].error){
         Message.error(info[info.length-1].error.messsage)
       }
+    //   newInfoField.getValue('filePathArray').push(info[info.length-1].uid)
+
       // newInfoField.getValue('filePathArray').push(info[info.length-1].uid)
       
       // let pic_path = newInfoField.getValue('filePathArray')
@@ -6119,21 +6200,22 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     })
   }
 
-  const renderOptions =(id, valid, verify)=>{
+  const renderOptions =(id, validFlag, verify)=>{
+    console.log(id, validFlag)
     if(userType == 'manager'){
-      if(!valid){
+    //   if(!validFlag){
+    //     return(
+    //       <Button type="normal" onClick={updateVerify.bind(id,1)}>审核通过</Button>
+    //     )  
+    //   }
+      if (verify){
         return(
-          <Button type="normal" onClick={updateVerify(id,1)}>审核通过</Button>
-        )  
-      }
-      else if (verify){
-        return(
-          <Button type="secondary" onClick={updateValid(id,2)}>下架信息</Button>
+          <Button type="secondary" onClick={updateValid.bind(id,0)}>下架信息</Button>
         )  
       }
       else if (!verify){
         return(
-          <Button type="primary" onClick={updateValid(id,1)}>上架信息</Button>
+          <Button type="primary" onClick={updateValid.bind(id,1)}>上架信息</Button>
         )  
       }
       
@@ -6141,7 +6223,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     else {
       return(
         <div>
-          <Button type="primary" onClick={openJoinDialog}>参与招商</Button>
+          <Button type="primary" onClick={openJoinDialog.bind(this,id)}>参与招商</Button>
           <Dialog
                 visible={joinVisible}
                 title="申请参与招商"
@@ -6151,7 +6233,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
               >
                 <Form field={field} fullWidth style={{ paddingLeft: 40, paddingRight: 40 }}>
                   <Form.Item format="tel" formatMessage="请输入正确的电话号码" label="电话号码" required requiredMessage="请输入电话">
-                    <Input name="telphone" placeholder="请输入电话号码" />
+                    <Input name="tel" placeholder="请输入电话号码" />
                   </Form.Item>
                   <Form.Item format="email"  formatMessage="请输入正确的邮箱" label="邮箱" required requiredMessage="请输入邮箱">
                     <Input name="email" placeholder="请输入邮箱" />
@@ -6163,16 +6245,17 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     }
 
   }
+
+  //信息展示
   const renderCards = () => {
-    //若当前是普通用户
     return cards.map((c: ICardItem, i: number) => (
       <div className={styles.ListItem} key={i}>
         <div className={styles.main}>
           <div className={styles.left}>
-            <img src="https://shadow.elemecdn.com/app/element/list.62a82841-1bcb-11ea-a71c-17428dec1b82.png" alt="img" />
+            <img src={"/"+c.picPath} alt="img" />
             <div>
               <div className={styles.title}>
-                {c.title}
+                {c.company}
               </div>
               <div className={styles.content}>
                 招商简介：{c.content}
@@ -6181,19 +6264,15 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                 邮箱：{c.email}
               </div>
               <div className={styles.subContent}>
-                电话号码：{c.telphone}
+                电话号码：{c.telephone}
               </div>
               <div className={styles.subContent}>
-                发布时间: {c.date}
-              </div>
-
-              <div className={styles.subContent}>
-                {c.subContent}
+                发布时间: {c.validTime}
               </div>
             </div>
           </div>
           <div className={styles.right}>
-            {renderOptions(c.id,c.valid,c.verify)}
+            {renderOptions(c.id, c.validFlag, c.verifyFlag)}
           </div>
         </div>
       </div>
@@ -6209,7 +6288,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
           <div className={styles.TagBoxItem}>
             
             <Typography.Text className={styles.TagTitleName}>地区</Typography.Text>
-            <CascaderSelect style={{ width: '302px' }} dataSource={dataSource.tagsA} onChange={onTagAValueChange} />;
+            <CascaderSelect style={{ width: '302px' }} dataSource={dataSource.tagsA} onChange={onTagAValueChange} />
             {/* <TagGroup>{renderTagListA()}</TagGroup> */}
           </div>
           {/* <div className={styles.TagBoxItem}>
@@ -6237,7 +6316,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                   >
                     <Form field={newInfoField} fullWidth style={{ paddingLeft: 40, paddingRight: 40 }}>
                       <Form.Item label="公司名称" required requiredMessage="请输入公司名称">
-                        <Input name="title" placeholder="请输入公司名称" />
+                        <Input name="company" placeholder="请输入公司名称" />
                       </Form.Item>
                       <Form.Item label="公司简介" required requiredMessage="请输入公司简介">
                         <Input name="content" placeholder="请输入公司简介" />
@@ -6249,7 +6328,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                         <Input name="email" placeholder="请输入邮箱" />
                       </Form.Item>
                       <Form.Item format="tel" formatMessage="请输入正确的电话号码" label="电话号码" required requiredMessage="请输入电话">
-                        <Input name="telphone" placeholder="请输入电话号码" />
+                        <Input name="tel" placeholder="请输入电话号码" />
                       </Form.Item>
                       <Form.Item label="图片" requiredMessage="请上传图片">
                         <Upload
@@ -6271,9 +6350,9 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             {renderCards()}
             <Box margin={[15, 0, 0, 0]} direction="row" align="center" justify="space-between">
               <div className={styles.total}>
-                共<span>200</span>条招商信息
+                共<span>{total}</span>条招商信息
               </div>
-              <Pagination onChange={onPaginationChange} />
+              <Pagination onChange={onPaginationChange} total={total} pageSize={pageSize}/>
             </Box>
           </Box>
         </Loading>
@@ -6295,10 +6374,10 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             <Typography.Text className={styles.TagTitleName}>名称</Typography.Text>
             <Search type="primary" hasIcon={false} searchText="搜索" onSearch={onSearchClick} />
           </div>
-          <div style={{paddingTop:'18px'}}>
-            <Typography.Text >当前位置: {dataSource.place}</Typography.Text>
+          {/* <div style={{paddingTop:'18px'}}> */}
+            {/* <Typography.Text >当前位置: {dataSource.place}</Typography.Text> */}
             {/* <<Typography.Text>{dataSource.place}</span> */}
-          </div>
+          {/* </div> */}
         </Box>
 
         <Loading visible={loading} className={styles.MainList}>
@@ -6316,7 +6395,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                   >
                     <Form field={newInfoField} fullWidth style={{ paddingLeft: 40, paddingRight: 40 }}>
                       <Form.Item label="公司名称" required requiredMessage="请输入公司名称">
-                        <Input name="title" placeholder="请输入公司名称" />
+                        <Input name="company" placeholder="请输入公司名称" />
                       </Form.Item>
                       <Form.Item label="公司简介" required requiredMessage="请输入公司简介">
                         <Input name="content" placeholder="请输入公司简介" />
@@ -6328,16 +6407,17 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                         <Input name="email" placeholder="请输入邮箱" />
                       </Form.Item>
                       <Form.Item format="tel" formatMessage="请输入正确的电话号码" label="电话号码" required requiredMessage="请输入电话">
-                        <Input name="telphone" placeholder="请输入电话号码" />
+                        <Input name="tel" placeholder="请输入电话号码" />
                       </Form.Item>
                       <Form.Item label="图片" requiredMessage="请上传图片">
                         <Upload
                           listType="image"
-                          action="https://www.easy-mock.com/mock/5b713974309d0d7d107a74a3/alifd/upload"
+                          action="/upload"
                           accept="image/png, image/jpg, image/jpeg, image/gif, image/bmp"
                           beforeUpload={beforeUpload}
                           onChange={onChange}
-                           >
+                          onSuccess={onSuccess}
+                        >
                           <Button type="primary" style={{margin: '0 0 10px'}}>Upload File</Button>
                         </Upload>
                       </Form.Item>
@@ -6349,9 +6429,9 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             {renderCards()}
             <Box margin={[15, 0, 0, 0]} direction="row" align="center" justify="space-between">
               <div className={styles.total}>
-                共<span>200</span>条招商信息
+                共<span>{total}</span>条招商信息
               </div>
-              <Pagination onChange={onPaginationChange} />
+              <Pagination onChange={onPaginationChange} total={total} pageSize={pageSize}/>
             </Box>
           </Box>
         </Loading>

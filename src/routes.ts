@@ -51,7 +51,7 @@ const routerConfig = [
     children: [
       { path: '/login', component: Login },
       { path: '/register', component: Register },
-      { path: '/resetpassword', component: ResetPw}
+      { path: '/resetpassword', component: ResetPw},
       // { path: '', redirect: '/login' },
     ],
   },
@@ -66,8 +66,6 @@ const routerConfig = [
       { path: '/zhaobiao', component: ZhaoBiao},
       { path: '/setting', component: Settings },
       { path: '/check', component: MyPublish },
-
-
 
 
       // { path: '/solution', component: Solution },

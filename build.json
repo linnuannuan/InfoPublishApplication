@@ -13,6 +13,19 @@
           "zh-cn"
         ]
       }
+    ],
+    [
+      "build-plugin-antd", 
+      {
+        "themeConfig": {
+          "brand-primary": "#1DA57A"
+        },
+        "importOptions": {
+          "libraryName": "antd-mobile",
+          "libraryDirectory": "es",
+          "style": true
+        }
+      }
     ]
   ]
 }

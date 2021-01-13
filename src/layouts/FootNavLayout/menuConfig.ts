@@ -4,30 +4,22 @@ const asideMenuConfig = [
   {
     name: '首页',
     path: '/index',
-    curl:'../public/home.svg',
-    url:'../public/home (1).svg',
     // children: []
     // icon: 'chart-pie',
   },
   {
     name: '加盟',
     path: '/join',
-    curl:'../public/加盟.svg',
-    url:'../public/加盟 (1).svg',
     // icon: 'chart-pie',
   },
   {
     name: '招商',
     path: '/invest',
-    curl:'../public/招商部.svg',
-    url:'../public/招商部 (1).svg',
     // icon: 'chart-pie',
   },
   {
     name: '转让及招标',
     path: '/zhaobiao',
-    curl:'../public/转让标签.svg',
-    url:'../public/转让标签 (1).svg',
     // icon: 'account',
   }
   // {

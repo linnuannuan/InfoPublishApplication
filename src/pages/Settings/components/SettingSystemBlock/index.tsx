@@ -167,9 +167,9 @@ export interface SettingSystemProps {
 
 const DEFAULT_DATA: SettingData = {
   vipCount: 1,
-  vipUnit: 'year',
+  vipUnit: 'YEAR',
   tvipCount: 11,
-  tvipUnit: 'day',
+  tvipUnit: 'DAY',
   vipMaxNum:10,
   vipStatus:0
 }
@@ -208,7 +208,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
   const refreshVipData=()=>{
     axios.get('/manage/vipApply')
     .then(function (response) {
-      setVipList(response.data.vipApplyList);
+      setVipList(response.data.data.vipApplyList);
       console.log(response);
     })
     .catch(function (error) {
@@ -217,10 +217,11 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
   }
   refreshVipData()
 
+  //查询加入申请
   const refreshJoinData=()=>{
     axios.get('/manage/joinList')
     .then(function (response) {
-      setApplyData(response.data.joinList);
+      setApplyData(response.data.data.joinList);
       console.log(response);
     })
     .catch(function (error) {
@@ -230,6 +231,27 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
   refreshJoinData()
 
 
+  //查询系统初始设置
+  const getSettingData=()=>{
+    axios.get('/manage/sysSetting')
+    .then(function (response) {
+      setValue({
+        vipStatus:response.data.data.list.find(d=>d.id==1)?.value,
+        tvipCount:response.data.data.list.find(d=>d.id==2)?.value,
+        tvipUnit:response.data.data.list.find(d=>d.id==2)?.unit,
+        vipCount:response.data.data.list.find(d=>d.id==3)?.value,
+        vipUnit:response.data.data.list.find(d=>d.id==3)?.unit,
+        vipMaxNum:response.data.data.list.find(d=>d.id==4)?.value,
+      });
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  getSettingData()
+
+
 
   const formChange = (values: SettingSystemProps): void => {
     setValue(values);
@@ -237,13 +259,13 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
 
   //vip审核通过
   const handleSubmit =(id,role)=>{
-    axios.post('/dealVipApply', 
-      {
-        flag:1,
-        role:role,
-        id:id,
+    axios.get('/manage/dealVipApply',{
+       params:{
+          flag:1,
+          role:role,
+          id:id,
       }
-    )
+    })
     .then(function (response) {
       console.log(response);
     })
@@ -253,11 +275,13 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
   }
 
   const handleReject =(id,role)=>{
-    axios.post('/dealVipApply', 
+    axios.get('/manage/dealVipApply', 
       {
-        flag:2,
-        role:role,
-        id:id,
+        params:{
+          flag:2,
+          role:role,
+          id:id,
+        }
       }
     )
     .then(function (response) {
@@ -270,10 +294,12 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
 
   //信息已促成
   const handleJoinSubmit =(id,role)=>{
-    axios.post('/dealJoin', 
+    axios.get('/manage/dealJoin', {
+      params:
       {
         id:id,
       }
+    }
     )
     .then(function (response) {
       console.log(response);
@@ -286,9 +312,11 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
 
   //确定设置数值
   const submitBasic =()=>{
-    axios.post('/manage/vipOpenSetting', 
+    axios.get('/manage/vipOpenSetting', 
       {
-        flag:postData.vipStatus
+        params:{
+          flag:postData.vipStatus
+        }
       }
     )
     .then(function (response) {
@@ -299,10 +327,12 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
     });
 
 
-    axios.post('/manage/vipOpenDaysSetting', 
+    axios.get('/manage/vipOpenDaysSetting', 
       {
-        days: postData.tvipCount,
-        unit: postData.tvipUnit,
+        params:{
+          days: postData.tvipCount,
+          unit: postData.tvipUnit,
+        }
       }
     )
     .then(function (response) {
@@ -312,11 +342,12 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       console.log(error);
     });
 
-    axios.post('/manage/vipOpenMonthsSetting', 
+    axios.get('/manage/vipOpenMonthsSetting', 
       {
-        month: postData.vipCount,
-        unit: postData.vipUnit,
-      }
+        params:{
+          month: postData.vipCount,
+          unit: postData.vipUnit,
+        }}
     )
     .then(function (response) {
       console.log(response);
@@ -326,9 +357,11 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
     });
 
 
-    axios.post('/manage/InfoUpNumSetting', 
+    axios.get('/manage/InfoUpNumSetting', 
       {
-        num: postData.vipMaxNum
+        params:{
+          num: postData.vipMaxNum
+        }
       }
     )
     .then(function (response) {
@@ -363,37 +396,37 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
                 >
                   
                   <FormItem label="招商信息发布条数上限" colSpan={12}>
-                      <NumberPicker name="vipMaxNum" type="inline" step={1} min={0} max={30} defaultValue={0} ></NumberPicker>
+                      <NumberPicker name="vipMaxNum" type="inline" step={1} min={0} max={30} defaultValue={postData.vipMaxNum} ></NumberPicker>
                       &nbsp;&nbsp;条
                   </FormItem>
                   <FormItem label="会员体验" colSpan={12}>
-                      <NumberPicker name="tvipCount" type="inline" step={1} min={0} max={30} defaultValue={0} ></NumberPicker>
+                      <NumberPicker name="tvipCount" type="inline" step={1} min={0} max={30} defaultValue={postData.tvipCount} ></NumberPicker>
                       <Select
                           name="tvipUnit"
-                          defaultValue="day"
+                          defaultValue={postData.tvipUnit}
                           aria-label="unit is"
                       >
-                        <Option value="day">天</Option>
-                        <Option value="month">月</Option>
-                        <Option value="year">年</Option>
+                        <Option value="DAY">天</Option>
+                        <Option value="MONTH">月</Option>
+                        <Option value="YEAR">年</Option>
                       </Select>
                       {/* <Form.Submit onClick={handleSubmit.bind(this, record.id)}>设置</Form.Submit> */}
                   </FormItem>
                   <FormItem label="正式会员" colSpan={12}>
-                      <NumberPicker name="vipCount" type="inline" step={1} min={0} max={30} defaultValue={0} ></NumberPicker>
+                      <NumberPicker name="vipCount" type="inline" step={1} min={0} max={30} defaultValue={postData.vipCount} ></NumberPicker>
                       <Select
                           name="vipUnit"
-                          defaultValue="day"
+                          defaultValue={postData.vipUnit}
                           aria-label="unit is"
                       >
-                        <Option value="day">天</Option>
-                        <Option value="month">月</Option>
-                        <Option value="year">年</Option>
+                        <Option value="DAY">天</Option>
+                        <Option value="MONTH">月</Option>
+                        <Option value="YEAR">年</Option>
                       </Select>
                       {/* <Form.Submit onClick={handleSubmit.bind(this, record.id)}>设置</Form.Submit> */}
                   </FormItem>
                   <FormItem colSpan={12} label="VIP板块开启状态" >
-                    <Radio.Group name="vipStatus">
+                    <Radio.Group name="vipStatus" defaultValue={postData.vipStatus}>
                       <Radio id="open" value={1}>开启</Radio>
                       <Radio id="close" value={0}>关闭</Radio>
                     </Radio.Group>
@@ -478,7 +511,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
                 <Table.Column cell={(value,index,record) => {
                     if(record.dealFlag){
                       return <>
-                                <Button type="secondary" onClick={handleSubmit.bind(this, record.id)}>已促成</Button>
+                                <Button type="secondary" onClick={handleJoinSubmit.bind(this, record.id)}>已促成</Button>
                              </>
                     }
                     else{

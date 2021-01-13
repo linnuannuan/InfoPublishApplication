@@ -23,22 +23,32 @@
 .TagBoxItem {
   display: flex;
   align-items: center;
+  margin:10px;
 }
+
 
 .TagTitleName {
   width: 56px;
   margin-right: 12px;
-  margin-bottom: 8px;
   color: #333;
   font-size: 14px;
   text-align: justify;
 }
 
-.MainList {
+.TagTitlePhoneName {
+  width: 56px;
+  margin-left: 10px;
+  color: #333;
+  font-size: 14px;
+  text-align: justify;
+}
+
+.MainList, .TagPhoneBox {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
+  padding-bottom: 0px;
   background: #f5f5f5;
 }
 
@@ -47,7 +57,7 @@
   background: #fff;
 }
 
-.ListItem {
+.ListItem , .TagPhoneBox{
   box-sizing: border-box;
   .main {
     display: flex;
@@ -108,3 +118,4 @@
     text-align: center;
   }
 }
+
