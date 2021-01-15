@@ -1,6 +1,7 @@
 import React from 'react';
 import { Avatar, Overlay, Menu, Icon, Button } from '@alifd/next';
 import styles from './index.module.scss';
+import axios from 'axios';
 
 const { Item } = Menu;
 const { Popup } = Overlay;
@@ -9,10 +10,12 @@ export interface Props {
   name: string;
   avatar: string;
   mail: string;
-  userType: string;
+  isManager: boolean;
 }
 
-var loginStatus = true
+var loginStatus = !!window.sessionStorage.getItem("username")
+
+var isManager = window.sessionStorage.getItem("type")=="manager"
 
 const turnSetting=()=>{
   console.log('turn setting')
@@ -24,11 +27,17 @@ const turnLogin=()=>{
 }
 
 const logOut=()=>{
-  window.localStorage.removeItem('name')
-  window.localStorage.removeItem('type')
-  // window.localStorage.removeItem('id')
-  window.location.reload()
-  loginStatus = false
+  axios.get('/logout')
+      .then((response)=>{
+        window.sessionStorage.removeItem('username')
+        window.sessionStorage.removeItem('type')
+        // window.localStorage.removeItem('id')
+        loginStatus = false
+        window.location.reload()
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
 
 }
 
@@ -58,13 +67,13 @@ const UserProfile = ({ name, avatar, mail }) => {
 };
 
 const HeaderAvatar = (props: Props) => {
-  const { userType, name, avatar } = props;
+  const {name, avatar } = props;
 
 
   //登录状态
   if(loginStatus){
     //用户是管理员，则有后台设置
-    if(userType == "1"){
+    if(isManager){
       return (
         <>
         <Popup
@@ -105,7 +114,6 @@ const HeaderAvatar = (props: Props) => {
               <UserProfile {...props} />
               <Menu className={styles.menu}>
                 <Item onClick={turnPublish}><Icon size="small" type="account" />我的发布</Item>
-                <Item onClick={turnSetting} ><Icon size="small" type="set" />后台设置</Item>
                 <Item onClick={logOut}><Icon size="small" type="exit" />退出</Item>
               </Menu>
             </div>
@@ -128,11 +136,11 @@ const HeaderAvatar = (props: Props) => {
 };
 
 HeaderAvatar.defaultProps = {
-  name:'用户',
-  // name: window.localStorage.getItem('name')?window.localStorage.getItem('name'):'用户',
-  mail: 'name@gmail.com',
+  // name:'用户',
+  name: window.sessionStorage.getItem('username')?window.sessionStorage.getItem('username'):'用户',
+  // mail: 'name@gmail.com',
   // avatar: 'https://img.alicdn.com/tfs/TB1.ZBecq67gK0jSZFHXXa9jVXa-904-826.png',
-  userType:'2',//   1管理员/2用户
+  isManager:false,//   1管理员/2用户
 };
 
 export default HeaderAvatar;

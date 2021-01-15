@@ -43,23 +43,25 @@ export default function RegisterBlock() {
 
   const sendCode = (values: RegisterProps, errors: []) => {
 
-    axios.post('/getSmsCode/register', 
+    axios.get('/getSmsCode/register',
       {
-        telephone:values.telephone
+        params: {
+          telephone: values.telephone
+        }
       }
     )
-    .then(function (response) {
-      console.log(response);
-      Message.success('验证码已发送');
+      .then(function (response) {
+        console.log(response);
+        Message.success('验证码已发送');
 
-      //存cookie 用户名 类型 密码
-      // storage.setItem('name', 'Tom');
-      // storage.setItem('type','')
-    })
-    .catch(function (error) {
-      console.log(error);
-      return;
-    });
+        //存cookie 用户名 类型 密码
+        // storage.setItem('name', 'Tom');
+        // storage.setItem('type','')
+      })
+      .catch(function (error) {
+        console.log(error);
+        return;
+      });
 
     // get values.phone
     checkRunning(true);
@@ -73,70 +75,72 @@ export default function RegisterBlock() {
     }
   };
 
-  const checkUserName= (rule: any, values: string, callback: (errors?: string) => void) => { 
-    // axios.post('/hasUsername',{username:values})
-    //     .then((response)=>{
-    //       if(response.data.flag){
-    //         return callback('用户名已存在');
-    //       }
-    //       else {
-    //         return callback();
-    //       }
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
-        
+  const checkUserName = (rule: any, values: string, callback: (errors?: string) => void) => {
+    axios.get('/hasUsername', {
+      params: {
+        username: values
+      }
+    })
+      .then((response) => {
+        if (response.data.data.flag) {
+          return callback('用户名已存在');
+        }
+        else {
+          return callback();
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
   };
 
   //telphone 一样
   // hasTelphone
-  const checkTelExist=(rule: any, values: string, callback: (errors?: string) => void) => {
-    // axios.post('/hasTelphone',{telephone:values})
-    //       .then((response)=>{
-    //         if(response.data.flag){
-    //           return callback('电话号码已注册');
-    //         }
-    //         else {
-    //           return callback();
-    //         }
-    //       })
-    //       .catch(function (error) {
-    //         console.log(error);
-    //       });
+  const checkTelExist = (rule: any, values: string, callback: (errors?: string) => void) => {
+    axios.get('/hasTelephone', {
+      params: {
+        telephone: values
+      }
+    })
+      .then((response) => {
+        if (response.data.data.flag) {
+          return callback('电话号码已注册');
+        }
+        else {
+          return callback();
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const handleSubmit = (values: RegisterProps, errors: []) => {
     console.log(values)
-    axios.post('/register',values)
-          .then((response)=>{
-            if(response.data.msg == "success"){
-              Message.success('注册成功')
-            }
-            else {
-              Message.error(response.data.msg);
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-            Message.error(error)
-          });
+    axios.post('/register', values)
+      .then((response) => {
+        if (response.data.msg == "success") {
+          Message.success('注册成功')
+          window.location.href="/user/login"
+        }
+        else {
+          Message.error(response.data.msg);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        Message.error(error)
+      });
   };
 
   return (
     <div className={styles.RegisterBlock}>
       <div className={styles.innerBlock}>
-        <a href="#">
-          <img
-            className={styles.logo}
-            src="https://img.alicdn.com/tfs/TB1KtN6mKH2gK0jSZJnXXaT1FXa-1014-200.png"
-            alt="logo"
-          />
-        </a>
         <p className={styles.desc}>注册账号</p>
 
         <Form value={postData} onChange={formChange} size="large">
-          <Item validator={checkUserName} required requiredMessage="必填">
+          <Item validator={checkUserName}  validatorTrigger='onBlur' required requiredMessage="必填">
             <Input name="username" size="large" maxLength={20} placeholder="用户名" />
           </Item>
           <Item required requiredMessage="必填">
@@ -147,7 +151,7 @@ export default function RegisterBlock() {
               placeholder="至少六位密码，区分大小写"
             />
           </Item>
-          <Item required requiredTrigger="onFocus" requiredMessage="必填" validator={checkPass}>
+          <Item required requiredTrigger="onFocus" requiredMessage="必填" validator={checkPass} >
             <Input.Password
               name="rePassword"
               size="large"
@@ -155,7 +159,7 @@ export default function RegisterBlock() {
               placeholder="确认密码"
             />
           </Item>
-          <Item format="tel" required requiredMessage="必填" asterisk={false} validator={checkTelExist}>
+          <Item format="tel" required requiredMessage="必填" asterisk={false} validator={checkTelExist} validatorTrigger='onBlur'>
             <Input
               name="telephone"
               size="large"
@@ -198,7 +202,7 @@ export default function RegisterBlock() {
               type="primary"
               onClick={handleSubmit}
               className={styles.submitBtn}
-              // validate
+            // validate
             >
               注册账号
             </Form.Submit>

@@ -42,9 +42,11 @@ export default function ResetBlock() {
 
   const sendCode = (values: ResetProps, errors: []) => {
 
-    axios.post('/getSmsCode/resetPassword', 
+    axios.get('/getSmsCode/resetPassword', 
       {
-        telephone:values.telephone
+        params:{
+          telephone:values.telephone
+        }
       }
     )
     .then(function (response) {
@@ -62,6 +64,25 @@ export default function ResetBlock() {
 
     // get values.phone
     checkRunning(true);
+  };
+
+  const checkTelExist = (rule: any, values: string, callback: (errors?: string) => void) => {
+    axios.get('/hasTelephone', {
+      params: {
+        telephone: values
+      }
+    })
+      .then((response) => {
+        if (!response.data.data.flag) {
+          return callback('不存在该账户');
+        }
+        else {
+          return callback();
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const checkPass = (rule: any, values: string, callback: (errors?: string) => void) => {
@@ -95,17 +116,10 @@ export default function ResetBlock() {
   return (
     <div className={styles.ResetBlock}>
       <div className={styles.innerBlock}>
-        <a href="#">
-          <img
-            className={styles.logo}
-            src="https://img.alicdn.com/tfs/TB1KtN6mKH2gK0jSZJnXXaT1FXa-1014-200.png"
-            alt="logo"
-          />
-        </a>
         <p className={styles.desc}>忘记密码</p>
 
         <Form value={postData} onChange={formChange} size="large">
-        <Item format="tel" required requiredMessage="必填" asterisk={false}>
+        <Item format="tel" validator={checkTelExist} validatorTrigger='onBlur'   required requiredMessage="必填" asterisk={false}>
             <Input
               name="telephone"
               size="large"

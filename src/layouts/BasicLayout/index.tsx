@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shell, ConfigProvider, Menu, Button, Nav} from '@alifd/next';
+import { Shell, ConfigProvider, Menu, Button, Nav, Message} from '@alifd/next';
 import PageNav from './components/PageNav';
 import GlobalSearch from './components/GlobalSearch';
 import Notice from './components/Notice';
@@ -46,16 +46,22 @@ import { render } from 'react-dom';
 interface IGetDevice {
   (width: number): 'phone' | 'tablet' | 'desktop';
 }
+
+
+const mobileAgent = new Array("iphone", "ipod", "ipad", "android", "mobile", "blackberry", "webos", "incognito", "webmate", "bada", "nokia", "lg", "ucweb", "skyfire");
+
 export default function BasicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const getDevice: IGetDevice = (width) => {
+
+
     const isPhone =
       typeof navigator !== 'undefined' &&
       navigator &&
-      navigator.userAgent.match(/phone/gi);
+      (navigator.userAgent.match(/phone/gi)|| !!mobileAgent.find(d=>(navigator.userAgent.toLowerCase().indexOf(d)>-1)))
 
     if (width < 680 || isPhone) {
       return 'phone';
@@ -93,7 +99,6 @@ export default function BasicLayout({
   const turnJoin=()=>{
     window.location.href = '/#/join'
   }
-
 
 
   if(device == 'phone'){

@@ -1,4 +1,5 @@
 export default {
+    // cards:[]
     cards:[
         {
           id:'1',
@@ -9,7 +10,8 @@ export default {
           validTime:'2020-12-22',
           pic_path:"/public/(3).jpg",
           verifyFlag:0,
-          validFlag:0
+          validFlag:0,
+          address:"陕西省西安市"
         },
         {
           id:'2',
@@ -21,7 +23,8 @@ export default {
           pic_path:"/public/(3).jpg",
           // 状态0表示未审核  1表示审核未上架  2表示审核已上架
           verifyFlag:1,
-          validFlag:0
+          validFlag:0,
+          address:"陕西省西安市"
         },
         {
           id:'3',
@@ -33,7 +36,8 @@ export default {
           pic_path:"/public/(3).jpg",
           // 状态0表示未审核  1表示审核未上架  2表示审核已上架
           verifyFlag:0,
-          validFlag:1
+          validFlag:1,
+          address:"陕西省西安市"
         },
         {
           id:'4',
@@ -45,7 +49,8 @@ export default {
           pic_path:"/public/(3).jpg",
           // 状态0表示未审核  1表示审核未上架  2表示审核已上架
           verifyFlag:1,
-          validFlag:1
+          validFlag:1,
+          address:"陕西省西安市"
         },
         {
           id:'5',
@@ -57,7 +62,8 @@ export default {
           pic_path:"/public/(3).jpg",
           // 状态0表示未审核  1表示审核未上架  2表示审核已上架
           verifyFlag:0,
-          validFlag:0
+          validFlag:0,
+          address:"陕西省西安市"
         },
       ]
 };

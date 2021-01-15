@@ -7,8 +7,13 @@ const Option = Select.Option;
 const { Cell } = ResponsiveGrid;
 const FormItem = Form.Item;
 
-const userType = 'manager'
-// const userType = window.localStorage.getItem('type')
+
+const userType = window.sessionStorage.getItem('type')
+
+const isManager = (userType == 'manager')
+
+const isVip = (userType == 'vip' || userType == 'manager')
+
 
 const MockJoinList = [
   {
@@ -76,9 +81,6 @@ const MockJoinList = [
   }
 ]
 
-
-
-
 const SettingSystemBlock: React.SFC = (props): JSX.Element => {
   const {
     // dataSource = DEFAULT_DATA,
@@ -94,12 +96,13 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
   const [joinStatus, setJoinStatus] = useState([]);
   const [inited, setInited] = useState(false);
 
+  
+  const isPhone = typeof navigator !== 'undefined' &&
+                    navigator &&
+                    navigator.userAgent.match(/phone/gi);
+
   useEffect(() => {
-    setVipList(MockJoinList)
-    setJoinList(MockJoinList)
-    setInvestList(MockJoinList)
-    setZhaobiaoList(MockJoinList)
-    setInited(true);
+    refreshInitData()
   }, [inited]);
 
 
@@ -113,6 +116,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
   }
 
 
+  
   const refreshInitData=()=>{
     //加盟
     axios.get('/user/joinApplyList')
@@ -127,7 +131,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
       console.log(error);
     });
     //招商 
-    axios.get('/user/zhaoShangApplyList')
+    axios.get('/user/zhaoshangApplyList')
     .then(function (response) {
       if(checkLogin(response)){
        setInvestList(response.data.data.zhaoshangApplyList);
@@ -170,10 +174,22 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
     });
 
     //联系状态查询
-    axios.get('')
-    .then(function (response) {
-      setJoinStatus(response.data.data.vipInfoList);
-      console.log(response);
+    axios.get(isManager?'/manage/wantJoinList':'/user/myJoinList')
+    .then(function (response1) {
+      if(isVip){
+        axios.get(isManager?'/manage/wantJoinInfoList':'/vip/myJoinList')
+            .then(function (response2) {
+
+                    setJoinStatus(isManager?response1.data.data.list.concat(response2.data.data.list):response1.data.data.joinList.concat(response2.data.data.joinList));
+                    console.log(response1,response2);
+                  })
+            .catch(function (error) {
+              console.log(error);
+            });
+      }
+      else{
+        setJoinStatus(response1.data.data.joinList)
+      }
     })
     .catch(function (error) {
       console.log(error);
@@ -182,162 +198,122 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
   }
 
 
-  refreshInitData()
+  //根据设备显示内容
+  const renderPublishContent=(dataSource)=>{
+    if(isPhone){
+      return <Table dataSource={dataSource}  size="small" hasBorder={false}>
+                {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
+
+                <Table.Column dataIndex="id" title="序号" />
+                <Table.Column dataIndex="company" title="标题" />
+                <Table.Column dataIndex="address" title="地址" />
+                <Table.Column dataIndex="applyTime"  title="申请时间"/>
+
+                <Table.Column title="审核状态" cell={(value,index,record) => {
+                  // varify 审核通过否，申请通过标志,0表示未审核，1表示审核通过，2表示未通过
+                    if(record.verifyFlag == 1){
+                      return <>已通过<Icon type="success" /></>
+                    }
+                    if(record.verifyFlag == 2){
+                      return <>已拒绝<Icon type="error" /></>
+                    }
+                    else{
+                      return <>待审核</>
+                    }
+                  }}>
+
+                </Table.Column>
+              </Table>
+    }
+    return <Table dataSource={dataSource}  hasBorder={false}>
+    {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
+
+    <Table.Column dataIndex="id" title="序号" />
+    <Table.Column dataIndex="company" title="标题" />
+    <Table.Column dataIndex="content" title="介绍" />
+    <Table.Column dataIndex="address" title="地址" />
+    <Table.Column dataIndex="telephone" title="电话" />
+    <Table.Column dataIndex="applyTime"  title="申请时间"/>
+
+    <Table.Column title="审核状态" cell={(value,index,record) => {
+      // varify 审核通过否，申请通过标志,0表示未审核，1表示审核通过，2表示未通过
+        if(record.verifyFlag == 1){
+          return <>已通过<Icon type="success" /></>
+        }
+        if(record.verifyFlag == 2){
+          return <>已拒绝<Icon type="error" /></>
+        }
+        else{
+          return <>待审核</>
+        }
+      }}>
+
+    </Table.Column>
+  </Table>
+  }
+
+
+
+
+
+
 
   return (
     <div className={styles.SettingPersonBlock}>
       <Tab className={styles.customTab} navClassName={styles.customTabHead}>
     
-      <Tab.Item title="招商信息" key="invest">
+      <Tab.Item title="查看已发布信息" key="info">
           <Card free contentHeight={600}>
-            <Card.Header/>
-             <Card.Content>
-              <Table dataSource={investList}  hasBorder={false}>
-                {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
-
-                <Table.Column dataIndex="id" title="序号" />
-                <Table.Column dataIndex="company" title="标题" />
-                <Table.Column dataIndex="content" title="介绍" />
-                <Table.Column dataIndex="address" title="地址" />
-                <Table.Column dataIndex="telephone" title="电话" />
-                <Table.Column dataIndex="applyTime"  title="申请时间"/>
-
-                <Table.Column title="审核状态" cell={(value,index,record) => {
-                  // varify 审核通过否，申请通过标志,0表示未审核，1表示审核通过，2表示未通过
-                    if(record.verifyFlag == 1){
-                      return <>已通过<Icon type="success" /></>
-                    }
-                    if(record.verifyFlag == 2){
-                      return <>已拒绝<Icon type="error" /></>
-                    }
-                    else{
-                      return <>待审核</>
-                    }
-                  }}>
-
-                </Table.Column>
-              </Table>
+            <Card.Header 
+              title="招商"/>
+            <Card.Content>
+                {renderPublishContent(investList)}
             </Card.Content>
           </Card>
       </Tab.Item>
    
-      <Tab.Item title="加盟信息" key="join">
+      <Tab.Item title="查看已发布信息" key="info">
           <Card free contentHeight={600}>
-            <Card.Header/>
-             <Card.Content>
-              <Table dataSource={joinList}  hasBorder={false}>
-                {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
-
-                <Table.Column dataIndex="id" title="序号" />
-                <Table.Column dataIndex="company" title="标题" />
-                <Table.Column dataIndex="content" title="介绍" />
-                <Table.Column dataIndex="address" title="地址" />
-                <Table.Column dataIndex="telephone" title="电话" />
-                <Table.Column dataIndex="applyTime"  title="申请时间"/>
-
-                <Table.Column title="审核状态" cell={(value,index,record) => {
-                  // varify 审核通过否，申请通过标志,0表示未审核，1表示审核通过，2表示未通过
-                    if(record.verifyFlag == 1){
-                      return <>已通过<Icon type="success" /></>
-                    }
-                    if(record.verifyFlag == 2){
-                      return <>已拒绝<Icon type="error" /></>
-                    }
-                    else{
-                      return <>待审核</>
-                    }
-                  }}>
-
-                </Table.Column>
-              </Table>
-            </Card.Content>
+            <Card.Header title="加盟"/>
+            <Card.Content>
+                {renderPublishContent(joinList)}
+             </Card.Content>
           </Card>
       </Tab.Item>
-      <Tab.Item title="招标转让信息" key="zhaobiao">
+      <Tab.Item title="查看已发布信息" key="info">
           <Card free contentHeight={600}>
-            <Card.Header/>
+             <Card.Header title="招标"/>
              <Card.Content>
-              <Table dataSource={zhaobiaoList}  hasBorder={false}>
-                {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
-
-                <Table.Column dataIndex="id" title="序号" />
-                <Table.Column dataIndex="company" title="标题" />
-                <Table.Column dataIndex="content" title="介绍" />
-                <Table.Column dataIndex="address" title="地址" />
-                <Table.Column dataIndex="telephone" title="电话" />
-                <Table.Column dataIndex="applyTime"  title="申请时间"/>
-
-                <Table.Column title="审核状态" cell={(value,index,record) => {
-                  // varify 审核通过否，申请通过标志,0表示未审核，1表示审核通过，2表示未通过
-                    if(record.verifyFlag == 1){
-                      return <>已通过<Icon type="success" /></>
-                    }
-                    if(record.verifyFlag == 2){
-                      return <>已拒绝<Icon type="error" /></>
-                    }
-                    else{
-                      return <>待审核</>
-                    }
-                  }}>
-
-                </Table.Column>
-              </Table>
-            </Card.Content>
+              {renderPublishContent(zhaobiaoList)}
+             </Card.Content>
           </Card>
       </Tab.Item>
-      <Tab.Item title="VIP信息区" key="vip">
+      <Tab.Item title="查看已发布信息" key="info">
           <Card free contentHeight={600}>
-            <Card.Header/>
+             <Card.Header title="VIP"/>
              <Card.Content>
-              <Table dataSource={vipList}  hasBorder={false}>
-                {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
-
-                <Table.Column dataIndex="id" title="序号" />
-                <Table.Column dataIndex="company" title="标题" />
-                <Table.Column dataIndex="content" title="介绍" />
-                <Table.Column dataIndex="address" title="地址" />
-                <Table.Column dataIndex="telephone" title="电话" />
-                <Table.Column dataIndex="applyTime"  title="申请时间"/>
-
-                <Table.Column title="审核状态" cell={(value,index,record) => {
-                  // varify 审核通过否，申请通过标志,0表示未审核，1表示审核通过，2表示未通过
-                    if(record.verifyFlag == 1){
-                      return <>已通过<Icon type="success" /></>
-                    }
-                    if(record.verifyFlag == 2){
-                      return <>已拒绝<Icon type="error" /></>
-                    }
-                    else{
-                      return <>待审核</>
-                    }
-                  }}>
-
-                </Table.Column>
-              </Table>
-            </Card.Content>
+                {renderPublishContent(vipList)}
+             </Card.Content>
           </Card>
       </Tab.Item>
-      <Tab.Item title="联系状态查询" key="help">
+      <Tab.Item title="申请状态查询" key="help">
           <Card free contentHeight={600}>
             <Card.Header
-              title="信息促成"
-            //   extra={
-            //     <Box spacing={10} direction="row">
-            //       <Button type="secondary">设置角色 1 权限</Button>
-            //       <Button type="primary">新增</Button>
-            //     </Box>
-            // }
+              title="申请加入状态"
             />
             <Card.Content>
               <Table dataSource={joinStatus} hasBorder={false}>
                 <Table.Column title="序号" dataIndex="id" />
                 <Table.Column title="项目名称" dataIndex="company" />
+                <Table.Column title="项目邮箱" dataIndex="apply_email" />
+                <Table.Column title="项目电话号码" dataIndex="apply_telephone" />   
+
                 <Table.Column title="邮箱" dataIndex="email" />
-                <Table.Column title="电话号码" dataIndex="telephone" />
+                <Table.Column title="电话号码" dataIndex="telephone" />                
                 {/* <Table.Column dataIndex="period" /> */}
-                <Table.Column title="申请时间" dataIndex="time" />
+                <Table.Column title="申请时间" dataIndex="joinTime" />
                 <Table.Column cell={(value,index,record) => {
-                    if(record.dealFlag){
+                    if(!!record.dealFlag){
                       return <>已受理<Icon type="success" />
                              </>
                     }
@@ -349,17 +325,11 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
               </Table>
             </Card.Content>
           </Card>
-        </Tab.Item>
-        <Tab.Item title="VIP申请状态查询" key="help">
+      </Tab.Item>
+      <Tab.Item title="申请状态查询" key="help">
           <Card free contentHeight={600}>
             <Card.Header
-              title="信息促成"
-            //   extra={
-            //     <Box spacing={10} direction="row">
-            //       <Button type="secondary">设置角色 1 权限</Button>
-            //       <Button type="primary">新增</Button>
-            //     </Box>
-            // }
+              title="VIP审核状态"
             />
             <Card.Content>
               <Table dataSource={vipStatus} hasBorder={false}>

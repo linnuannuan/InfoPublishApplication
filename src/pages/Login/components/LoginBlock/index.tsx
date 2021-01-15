@@ -71,8 +71,8 @@ const LoginBlock: React.FunctionComponent<LoginProps> = (
           var longitude = position.coords.longitude;
           var latitude = position.coords.latitude;
           setAddress({
-            'longitude':longitude,
-            'latitude':latitude
+            'longitude':longitude.toString(),
+            'latitude':latitude.toString()
           })
           // alert(longitude);
           // alert(latitude);
@@ -88,7 +88,6 @@ const LoginBlock: React.FunctionComponent<LoginProps> = (
             case error.POSITION_UNAVAILABLE:
                 Message.error("位置信息是不可用的")
                 // alert("位置信息是不可用的");
-
 
                 break;
             case error.TIMEOUT:
@@ -136,32 +135,38 @@ const LoginBlock: React.FunctionComponent<LoginProps> = (
         longitude: values.longitude,
         latitude : values.latitude
       })
-      .then(function (response) {
-        console.log(response);
+      .then(function (response1) {
+        // console.log('login response', response1);
+        
+        console.log('登陆login response', response1);
+        Message.success('登录成功');
 
-        if(response.status == 200){
-          Message.success('登录成功');
-          //跳转至首页
+        //获取权限
+        axios.get('/user/getSessionInfo')
+        .then((response)=>{
+          console.log('请求权限/user/getSessionInfo',response)
+          var type = response.data.data.roleList.indexOf("ADMIN")>-1?"manager":(response.data.data.roleList.indexOf("VIP")>-1?"vip":"user")
+          window.sessionStorage.setItem("username",response.data.data.username)
+          console.log('getType', type)
+          window.sessionStorage.setItem("type", type)
+          console.log('sessionStorage:', window.sessionStorage)
+          console.log('跳转前', response1);
           window.location.href="/index";
-        }
-        if(response.status == 401){
-          Message.error('密码错误');
-        }
-
-        //存cookie 用户名 类型 密码
+        })
+        .catch((error)=>{
+          console.log(error)
+        })
+          //跳转至首页
+        
       })
       .catch(function (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           console.log('error.response')
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
           if(error.response.status == 401){
-            Message.error('密码错误')
+            Message.error('用户名或者密码错误')
           }
-
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -172,6 +177,13 @@ const LoginBlock: React.FunctionComponent<LoginProps> = (
           console.log('Error', error.message);
         }
     });
+
+    // window.sessionStorage.setItem("username",'user')
+    // // ['ADMIN','VIP','EXP_VIP','USER']
+    // window.sessionStorage.setItem("type", 'manager')
+
+    // console.log('sessionStorage:', window.sessionStorage)
+    // window.location.href="/index";
 
   };
 
