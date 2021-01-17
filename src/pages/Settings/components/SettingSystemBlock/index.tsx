@@ -586,7 +586,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
               <Table size={isPhone?"small":"medium"} dataSource={applyData} hasBorder={false}>
                 <Table.Column title="Id" dataIndex="id" />
                 <Table.Column title="申请人" dataIndex="username" />
-                <Table.Column title="名称" dataIndex="title" />
+                <Table.Column title="名称" dataIndex="company" />
                 <Table.Column title="邮箱" dataIndex="email" />
                 {isPhone?"": <Table.Column title="电话号码" dataIndex="telephone" />}
                 {isPhone?"": <Table.Column title="申请时间" dataIndex="join_time" />}
