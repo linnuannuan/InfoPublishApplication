@@ -179,7 +179,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     var [visible, setVisible] = useState(false)
     var [joinVisible, setJoinVisible] = useState(false)
     var [modifyVisible, setModifyVisible] = useState(false)
-    var [isVip, setIsVip] = useState(true)
+    var [isVip, setIsVip] = useState(false)
 
 
 
@@ -209,8 +209,8 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                 if (checkLogin(response)) {
                     setData(response)
 
-                    if (response.data.msg == "没有vip权限") {
-                        setIsVip(false)
+                    if (response.data.msg !== "没有vip权限") {
+                        setIsVip(true)
                     }
                 }
                 console.log(response);
@@ -258,8 +258,8 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             .then(function (response) {
                 if (checkLogin(response)) {
 
-                    if (response.data.msg == "没有vip权限") {
-                        setIsVip(false)
+                    if (response.data.msg !== "没有vip权限") {
+                        setIsVip(true)
                     }
                     else {
                         setCardValue(response.data.data.list);
@@ -290,8 +290,8 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
         })
             .then(function (response) {
                 if (checkLogin(response)) {
-                    if (response.data.msg == "没有vip权限") {
-                        setIsVip(false)
+                    if (response.data.msg !== "没有vip权限") {
+                        setIsVip(true)
                     }
                     else {
                         setCardValue(response.data.data.list);
@@ -320,8 +320,8 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
         })
             .then(function (response) {
                 if (checkLogin(response)) {
-                    if (response.data.msg == "没有vip权限") {
-                        setIsVip(false)
+                    if (response.data.msg !== "没有vip权限") {
+                        setIsVip(true)
                     }
                     else {
                         setCardValue(response.data.data.list);
@@ -350,14 +350,14 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
         })
             .then(function (response) {
                 if (checkLogin(response)) {
-                    if(response.data.msg=="没有vip权限"){
-                        setIsVip(false) 
+                    if (response.data.msg !== "没有vip权限") {
+                        setIsVip(true)
                     }
-                    else{
+                    else {
                         setCardValue(response.data.data.list);
                         setTotal(response.data.data.total)
                         setPageSize(response.data.data.pageSize)
-                        setLoading(false);            
+                        setLoading(false);
                     }
                 }
                 console.log(response);
@@ -539,10 +539,10 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             telephone: modifyField.getValue('telephone'),
             email: modifyField.getValue('email'),
             filePathArray: modifyField.getValue('filePathArray').toString(),
-            address: modifyField.getValue('address').province +","+ modifyField.getValue('address').city +","+  modifyField.getValue('address').region,
+            address: modifyField.getValue('address').province + "," + modifyField.getValue('address').city + "," + modifyField.getValue('address').region,
             id: modifyField.getValue('id'),
-            oldPath:modifyField.getValue('oldPath')
-            })
+            oldPath: modifyField.getValue('oldPath')
+        })
             .then(function (response) {
                 console.log(response);
                 if (response.data.msg == "success") {
