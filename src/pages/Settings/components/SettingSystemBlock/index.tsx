@@ -234,7 +234,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       }
     })
     .then(function (response) {
-      setVipList(response.data.data.vipApplyList);
+      setVipList(response.data.data.list);
       setPage({
         pageSize:response.data.data.pageSize,
         total:response.data.data.total
@@ -360,6 +360,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       }
       )
       .then(function (response) {
+        refreshJoinData(1)
         console.log(response);
       })
       .catch(function (error) {
@@ -376,6 +377,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       }
       )
       .then(function (response) {
+        refreshJoinData(1)
         console.log(response);
       })
       .catch(function (error) {
@@ -544,7 +546,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
                 {/* <Table.Column dataIndex="period" /> */}
                 <Table.Column dataIndex="applyTime"  title="申请时间"/>
                 <Table.Column cell={(value,index,record) => {
-                    if(record.verifyFlag){
+                    if(!record.verifyFlag){
                       return <>
                                 <Button size={isPhone?"small":"medium"} type="secondary" onClick={handleSubmit.bind(this, record.id, record.vipType)}>通过</Button>
                                 <Button size={isPhone?"small":"medium"} onClick={handleReject.bind(this, record.id, record.vipType)}>拒绝</Button>
@@ -586,12 +588,10 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
                 <Table.Column title="申请人" dataIndex="username" />
                 <Table.Column title="名称" dataIndex="title" />
                 <Table.Column title="邮箱" dataIndex="email" />
-                {
-                  isPhone?"":<><Table.Column title="电话号码" dataIndex="telephone" />
-                                <Table.Column title="申请时间" dataIndex="joinTime" /></>
-                }
+                {isPhone?"": <Table.Column title="电话号码" dataIndex="telephone" />}
+                {isPhone?"": <Table.Column title="申请时间" dataIndex="join_time" />}
                 <Table.Column cell={(value,index,record) => {
-                    if(record.dealFlag){
+                    if(!record.deal_flag){
                       return <>
                                 <Button size={isPhone?"small":"medium"} type="secondary" onClick={handleJoinSubmit.bind(this, record.id, record.type)}>已促成</Button>
                              </>

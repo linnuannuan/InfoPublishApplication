@@ -13,153 +13,156 @@ export interface news {
   moduleFlag?: string;
 }
 
-const newInfo = [
-  {
-    moduleFlag: "招商",
-    company: "四川学校食堂劳务承包公告",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "加盟",
-    company: "北京阿松大餐饮管理有限公司",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "郑州金水区餐厅招商",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "海南中学食堂托管服务招标公告",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "加盟",
-    company: "北京金百禾餐饮管理有限公司",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "郑州金水区餐厅招商",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "郑州金水区餐厅招商",
-    applyTime: "1月4日"
-  }, {
-    moduleFlag: "招商",
-    company: "四川学校食堂劳务承包公告",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "加盟",
-    company: "北京阿松大餐饮管理有限公司",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "郑州金水区餐厅招商",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "海南中学食堂托管服务招标公告",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "加盟",
-    company: "北京金百禾餐饮管理有限公司",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "郑州金水区餐厅招商",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "郑州金水区餐厅招商",
-    applyTime: "1月4日"
-  }, {
-    moduleFlag: "招商",
-    company: "四川学校食堂劳务承包公告",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "加盟",
-    company: "北京阿松大餐饮管理有限公司",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "郑州金水区餐厅招商",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "海南中学食堂托管服务招标公告",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "加盟",
-    company: "北京金百禾餐饮管理有限公司",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "郑州金水区餐厅招商",
-    applyTime: "1月4日"
-  },
-  {
-    moduleFlag: "招商",
-    company: "郑州金水区餐厅招商",
-    applyTime: "1月4日"
-  }
-]
-const investData = [
-  {
-    id: '1',
-    company: '上海一片天餐饮管理股份有限公司',
-    content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-    email: 'dadas@mail.com',
-    url: '(7)',
-    applyTime: '2020-12-22',
-  },
-  {
-    id: '2',
-    company: '上海一片天餐饮管理股份有限公司',
-    content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-    email: 'dadas@mail.com',
-    url: '(8)',
-    applyTime: '2020-12-22',
-  },
-  {
-    id: '3',
-    company: '上海一片天餐饮管理股份有限公司',
-    content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-    email: 'dadas@mail.com',
-    url: '(9)',
-    applyTime: '2020-12-22',
-  },
-  {
-    id: '4',
-    company: '上海一片天餐饮管理股份有限公司',
-    content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-    email: 'dadas@mail.com',
-    url: '(10)',
-    applyTime: '2020-12-22',
-  },
-  {
-    id: '5',
-    company: '上海一片天餐饮管理股份有限公司',
-    content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
-    email: 'dadas@mail.com',
-    url: '(11)',
-    applyTime: '2020-12-22',
-  }
-]
+const newInfo = []
+
+// [
+//   {
+//     moduleFlag: "招商",
+//     company: "四川学校食堂劳务承包公告",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "加盟",
+//     company: "北京阿松大餐饮管理有限公司",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "郑州金水区餐厅招商",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "海南中学食堂托管服务招标公告",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "加盟",
+//     company: "北京金百禾餐饮管理有限公司",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "郑州金水区餐厅招商",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "郑州金水区餐厅招商",
+//     applyTime: "1月4日"
+//   }, {
+//     moduleFlag: "招商",
+//     company: "四川学校食堂劳务承包公告",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "加盟",
+//     company: "北京阿松大餐饮管理有限公司",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "郑州金水区餐厅招商",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "海南中学食堂托管服务招标公告",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "加盟",
+//     company: "北京金百禾餐饮管理有限公司",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "郑州金水区餐厅招商",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "郑州金水区餐厅招商",
+//     applyTime: "1月4日"
+//   }, {
+//     moduleFlag: "招商",
+//     company: "四川学校食堂劳务承包公告",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "加盟",
+//     company: "北京阿松大餐饮管理有限公司",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "郑州金水区餐厅招商",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "海南中学食堂托管服务招标公告",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "加盟",
+//     company: "北京金百禾餐饮管理有限公司",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "郑州金水区餐厅招商",
+//     applyTime: "1月4日"
+//   },
+//   {
+//     moduleFlag: "招商",
+//     company: "郑州金水区餐厅招商",
+//     applyTime: "1月4日"
+//   }
+// ]
+const investData = []
+// [
+//   {
+//     id: '1',
+//     company: '上海一片天餐饮管理股份有限公司',
+//     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
+//     email: 'dadas@mail.com',
+//     url: '(7)',
+//     applyTime: '2020-12-22',
+//   },
+//   {
+//     id: '2',
+//     company: '上海一片天餐饮管理股份有限公司',
+//     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
+//     email: 'dadas@mail.com',
+//     url: '(8)',
+//     applyTime: '2020-12-22',
+//   },
+//   {
+//     id: '3',
+//     company: '上海一片天餐饮管理股份有限公司',
+//     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
+//     email: 'dadas@mail.com',
+//     url: '(9)',
+//     applyTime: '2020-12-22',
+//   },
+//   {
+//     id: '4',
+//     company: '上海一片天餐饮管理股份有限公司',
+//     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
+//     email: 'dadas@mail.com',
+//     url: '(10)',
+//     applyTime: '2020-12-22',
+//   },
+//   {
+//     id: '5',
+//     company: '上海一片天餐饮管理股份有限公司',
+//     content: '经营地区：欢迎来电洽谈业务合作，上海、南京、长三角、全国。',
+//     email: 'dadas@mail.com',
+//     url: '(11)',
+//     applyTime: '2020-12-22',
+//   }
+// ]
 
 const mockData = {
   newInfo: newInfo,

@@ -458,18 +458,16 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
     const submitModify = () => {
         setModifyVisible(false)
-        axios.get('/manage/modifyZhaoshangApply', {
-            params:{
-                company: modifyField.getValue('company'),
-                content: modifyField.getValue('content'),
-                telephone: modifyField.getValue('telephone'),
-                email: modifyField.getValue('email'),
-                filePathArray: modifyField.getValue('filePathArray').toString(),
-                address: modifyField.getValue('address').province +","+ modifyField.getValue('address').city +","+  modifyField.getValue('address').region,
-                id: modifyField.getValue('id'),
-                oldPath:modifyField.getValue('oldPath')
-            }
-        })
+        axios. post('/manage/modifyInfoApply', {
+            company: modifyField.getValue('company'),
+            content: modifyField.getValue('content'),
+            telephone: modifyField.getValue('telephone'),
+            email: modifyField.getValue('email'),
+            filePathArray: modifyField.getValue('filePathArray').toString(),
+            address: modifyField.getValue('address').province +","+ modifyField.getValue('address').city +","+  modifyField.getValue('address').region,
+            id: modifyField.getValue('id'),
+            oldPath:modifyField.getValue('oldPath')
+            })
             .then(function (response) {
                 console.log(response);
                 if (response.data.msg == "success") {

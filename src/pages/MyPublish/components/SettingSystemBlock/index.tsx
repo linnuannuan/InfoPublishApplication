@@ -16,69 +16,69 @@ const isVip = (userType == 'vip' || userType == 'manager')
 
 
 const MockJoinList = [
-  {
-    id:1,
-    title:'上海一片天餐饮管理股份有限公司',
-    telephone: 15911002198,
-    email:'apdadas@mail.com',
-    applyTime:'2020-01-02',
-    address:"西安",
-    concont:"一家公司"
-  },
-  {
-    id:2,
-    title:'上海一片天餐饮管理股份有限公司',
-    telephone: 15911002198,
-    email:'apdadas@mail.com',
-    applyTime:'2020-01-02',
-    address:"西安",
-    concont:"一家公司"
-  },
-  {
-    id:3,
-    title:'上海一片天餐饮管理股份有限公司',
-    telephone: 15911002198,
-    email:'apdadas@mail.com',
-    applyTime:'2020-01-02',
-    address:"西安",
-    concont:"一家公司"
-  },
-  {
-    id:4,
-    title:'上海一片天餐饮管理股份有限公司',
-    telephone: 15911002198,
-    email:'apdadas@mail.com',
-    applyTime:'2020-01-02',
-    address:"西安",
-    concont:"一家公司"
-  },
-  {
-    id:5,
-    title:'上海一片天餐饮管理股份有限公司',
-    telephone: 15911002198,
-    email:'apdadas@mail.com',
-    applyTime:'2020-01-02',
-    address:"西安",
-    concont:"一家公司"
-  },
-  {
-    id:6,
-    title:'上海一片天餐饮管理股份有限公司',
-    telephone: 15911002198,
-    email:'apdadas@mail.com',
-    applyTime:'2020-01-02',
-    address:"西安",
-    concont:"一家公司"
-  },
-  {
-    id:7,
-    title:'上海一片天餐饮管理股份有限公司',
-    telephone: 15911002198,
-    email:'apdadas@mail.com',
-    applyTime:'2020-01-02',
-    address:"西安",
-    concont:"一家公司"
-  }
+  // {
+  //   id:1,
+  //   title:'上海一片天餐饮管理股份有限公司',
+  //   telephone: 15911002198,
+  //   email:'apdadas@mail.com',
+  //   applyTime:'2020-01-02',
+  //   address:"西安",
+  //   concont:"一家公司"
+  // },
+  // {
+  //   id:2,
+  //   title:'上海一片天餐饮管理股份有限公司',
+  //   telephone: 15911002198,
+  //   email:'apdadas@mail.com',
+  //   applyTime:'2020-01-02',
+  //   address:"西安",
+  //   concont:"一家公司"
+  // },
+  // {
+  //   id:3,
+  //   title:'上海一片天餐饮管理股份有限公司',
+  //   telephone: 15911002198,
+  //   email:'apdadas@mail.com',
+  //   applyTime:'2020-01-02',
+  //   address:"西安",
+  //   concont:"一家公司"
+  // },
+  // {
+  //   id:4,
+  //   title:'上海一片天餐饮管理股份有限公司',
+  //   telephone: 15911002198,
+  //   email:'apdadas@mail.com',
+  //   applyTime:'2020-01-02',
+  //   address:"西安",
+  //   concont:"一家公司"
+  // },
+  // {
+  //   id:5,
+  //   title:'上海一片天餐饮管理股份有限公司',
+  //   telephone: 15911002198,
+  //   email:'apdadas@mail.com',
+  //   applyTime:'2020-01-02',
+  //   address:"西安",
+  //   concont:"一家公司"
+  // },
+  // {
+  //   id:6,
+  //   title:'上海一片天餐饮管理股份有限公司',
+  //   telephone: 15911002198,
+  //   email:'apdadas@mail.com',
+  //   applyTime:'2020-01-02',
+  //   address:"西安",
+  //   concont:"一家公司"
+  // },
+  // {
+  //   id:7,
+  //   title:'上海一片天餐饮管理股份有限公司',
+  //   telephone: 15911002198,
+  //   email:'apdadas@mail.com',
+  //   applyTime:'2020-01-02',
+  //   address:"西安",
+  //   concont:"一家公司"
+  // }
 ]
 
 const SettingSystemBlock: React.SFC = (props): JSX.Element => {
@@ -123,7 +123,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
     .then(function (response) {
       
       if(checkLogin(response)){
-        setJoinList(response.data.data.joinApplyList);
+        setJoinList(response.data.data.zhaoshangApplyList);
       }
       console.log(response);
     })
@@ -145,7 +145,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
     axios.get('/user/zhaobiaoApplyList')
     .then(function (response) {
       if(checkLogin(response)){
-        setZhaobiaoList(response.data.data.zhaobiaoApplyList);
+        setZhaobiaoList(response.data.data.zhaoshangApplyList);
       } 
       console.log(response);
     })
