@@ -542,7 +542,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             //     )  
             //   }
             return  <div style={isPhone?{'display':'inline-grid'}:{}}>
-                        <Button type="secondary" size={isPhone ? "small" : "medium"} onClick={updateValid.bind(this, id, validFlag?1:0)}> {validFlag?"删除信息":"上架信息"}</Button>
+                        <Button type="secondary" size={isPhone ? "small" : "medium"} onClick={updateValid.bind(this, id, validFlag?0:1)}> {validFlag?"删除信息":"上架信息"}</Button>
                         <Button type="primary" size={isPhone ? "small" : "medium"} onClick={modifyInfo.bind(this,record)}>修改信息</Button>
                     </div>
         }
@@ -727,7 +727,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                                             beforeUpload={beforeUpload}
                                             onChange={onChange}
                                             onSuccess={onModifySuccess}
-                                            defaultValue={modifyField.getValue("picPath")?.split(',').map((d,i)=>{ let c={}; c.id=i; c.url='http://www.xycyzs.com/'+d; return c})}
+                                            defaultValue={modifyField.getValue("picPath")?.split(',').map((d,i)=>{ let c={}; c.id=i; c.url='http://www.xycyzs.com/'+d; console.log(c); return c})}
                                         >
                                             <Button type="primary" size={isPhone ? "small" : "medium"} style={{ margin: '0 0 10px' }}>Upload File</Button>
                                         </Upload>

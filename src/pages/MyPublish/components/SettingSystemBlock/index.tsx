@@ -123,7 +123,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
     .then(function (response) {
       
       if(checkLogin(response)){
-        setJoinList(response.data.data.joinList);
+        setJoinList(response.data.data.joinApplyList);
       }
       console.log(response);
     })
@@ -145,7 +145,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
     axios.get('/user/zhaobiaoApplyList')
     .then(function (response) {
       if(checkLogin(response)){
-        setZhaobiaoList(response.data.data.zhaobiaoList);
+        setZhaobiaoList(response.data.data.zhaobiaoApplyList);
       } 
       console.log(response);
     })
@@ -155,7 +155,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
     //VIP 
     axios.get('/vip/vipInfoApplyList')
     .then(function (response) {
-      setVipList(response.data.data.vipInfoList);
+      setVipList(response.data.data.infoList);
       console.log(response);
     })
     .catch(function (error) {
@@ -164,9 +164,9 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
 
 
     //VIP开通状态查询 
-    axios.get('user/vipApplyList')
+    axios.get('/user/vipApplyList')
     .then(function (response) {
-      setVipStatus(response.data.data);
+      setVipStatus(response.data.data.data);
       console.log(response);
     })
     .catch(function (error) {
@@ -311,9 +311,9 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
                 <Table.Column title="邮箱" dataIndex="email" />
                 <Table.Column title="电话号码" dataIndex="telephone" />                
                 {/* <Table.Column dataIndex="period" /> */}
-                <Table.Column title="申请时间" dataIndex="joinTime" />
+                <Table.Column title="申请时间" dataIndex="join_time" />
                 <Table.Column cell={(value,index,record) => {
-                    if(!!record.dealFlag){
+                    if(!!record.deal_flag){
                       return <>已受理<Icon type="success" />
                              </>
                     }

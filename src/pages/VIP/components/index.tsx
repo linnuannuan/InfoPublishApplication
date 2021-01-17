@@ -17,7 +17,6 @@ const userType = window.sessionStorage.getItem('type')
 
 
 const isManager = (userType == 'manager')
-const isVip = (userType == 'vip' || userType == 'manager')
 const url = (isManager ? '/manage' : '/vip')
 
 export interface ICardItem {
@@ -143,7 +142,7 @@ const applytVIP = () => {
     })
         .then(function (response) {
             console.log(response);
-            if (response.data.msg == 'succcess') {
+            if (response.data.msg == 'success') {
                 Message.success('已申请，请等待管理员审核');
             }
             else {
@@ -180,6 +179,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     var [visible, setVisible] = useState(false)
     var [joinVisible, setJoinVisible] = useState(false)
     var [modifyVisible, setModifyVisible] = useState(false)
+    var [isVip, setIsVip] = useState(true)
 
 
 
@@ -208,9 +208,9 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                 console.log(response)
                 if (checkLogin(response)) {
                     setData(response)
-                    
-                    if(response.data.msg=="没有vip权限"){
-                        isVip == false
+
+                    if (response.data.msg == "没有vip权限") {
+                        setIsVip(false)
                     }
                 }
                 console.log(response);
@@ -257,10 +257,17 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             })
             .then(function (response) {
                 if (checkLogin(response)) {
-                    setCardValue(response.data.data.list);
-                    setTotal(response.data.data.total)
-                    setPageSize(response.data.data.pageSize)
-                    setLoading(false);
+
+                    if (response.data.msg == "没有vip权限") {
+                        setIsVip(false)
+                    }
+                    else {
+                        setCardValue(response.data.data.list);
+                        setTotal(response.data.data.total)
+                        setPageSize(response.data.data.pageSize)
+                        setLoading(false);
+                    }
+
                 }
                 console.log(response);
             })
@@ -283,10 +290,16 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
         })
             .then(function (response) {
                 if (checkLogin(response)) {
-                    setCardValue(response.data.data.list);
-                    setTotal(response.data.data.total)
-                    setPageSize(response.data.data.pageSize)
-                    setLoading(false);
+                    if (response.data.msg == "没有vip权限") {
+                        setIsVip(false)
+                    }
+                    else {
+                        setCardValue(response.data.data.list);
+                        setTotal(response.data.data.total)
+                        setPageSize(response.data.data.pageSize)
+                        setLoading(false);
+                    }
+
                 }
                 console.log(response);
             })
@@ -307,10 +320,15 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
         })
             .then(function (response) {
                 if (checkLogin(response)) {
-                    setCardValue(response.data.data.list);
-                    setTotal(response.data.data.total)
-                    setPageSize(response.data.data.pageSize)
-                    setLoading(false);
+                    if (response.data.msg == "没有vip权限") {
+                        setIsVip(false)
+                    }
+                    else {
+                        setCardValue(response.data.data.list);
+                        setTotal(response.data.data.total)
+                        setPageSize(response.data.data.pageSize)
+                        setLoading(false);
+                    }
                 }
                 console.log(response);
             })
@@ -332,10 +350,15 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
         })
             .then(function (response) {
                 if (checkLogin(response)) {
-                    setCardValue(response.data.data.list);
-                    setTotal(response.data.data.total)
-                    setPageSize(response.data.data.pageSize)
-                    setLoading(false);
+                    if(response.data.msg=="没有vip权限"){
+                        setIsVip(false) 
+                    }
+                    else{
+                        setCardValue(response.data.data.list);
+                        setTotal(response.data.data.total)
+                        setPageSize(response.data.data.pageSize)
+                        setLoading(false);            
+                    }
                 }
                 console.log(response);
             })
@@ -595,7 +618,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             //     )  
             //   }
             return <div style={isPhone ? { 'display': 'inline-grid' } : {}}>
-                <Button type="secondary" size={isPhone ? "small" : "medium"} onClick={updateValid.bind(this, id, validFlag ? 1 : 0)}> {validFlag ? "删除信息" : "上架信息"}</Button>
+                <Button type="secondary" size={isPhone ? "small" : "medium"} onClick={updateValid.bind(this, id, validFlag ? 0 : 1)}> {validFlag ? "删除信息" : "上架信息"}</Button>
                 <Button type="primary" size={isPhone ? "small" : "medium"} onClick={modifyInfo.bind(this, record)}>修改信息</Button>
             </div>
         }
@@ -682,7 +705,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
 
     //渲染全部页面
-    if(isVip){
+    if (isVip) {
         return (
             <>
                 <Card free className={styles.BasicList}>
@@ -823,18 +846,18 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             </>
         )
     }
-    else{
-         return (
-                        <>
-                            <Card free className={styles.BasicList}>
-                                {renderBox()}
-                                {renderVIPCard()}
-                                <div className={styles.MainList}>
-                                    当前用户无VIP信息区权限，请申请会员后查看！
+    else {
+        return (
+            <>
+                <Card free className={styles.BasicList}>
+                    {renderBox()}
+                    {renderVIPCard()}
+                    <div className={styles.MainList}>
+                        当前用户无VIP信息区权限，请申请会员后查看！
                                 </div>
-                            </Card>
-                        </>
-        )
+                </Card>
+            </>
+        )
     }
 
 };
