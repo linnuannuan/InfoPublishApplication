@@ -323,6 +323,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       }
     })
     .then(function (response) {
+      refreshVipData(1)
       console.log(response);
     })
     .catch(function (error) {
@@ -341,6 +342,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       }
     )
     .then(function (response) {
+      refreshVipData(1)
       console.log(response);
     })
     .catch(function (error) {
