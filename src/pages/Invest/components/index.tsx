@@ -345,6 +345,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
         modifyField.setValues(
             {
                 'id':record.id,
+                'username':record.username,
                 'company':record.company,
                 'address':
                 {
@@ -360,7 +361,6 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                 'email': record.email,
                 'filePathArray': record.picPath?.split(","),
                 'oldPath':record.picPath,
-                'id':record.id,
             }
         )
         
@@ -458,21 +458,20 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
 
     const submitModify = () => {
         setModifyVisible(false)
-        axios. post('/manage/modifyInfoApply', {
+        axios.post('/manage/modifyZhaoshangApply', {
             company: modifyField.getValue('company'),
             content: modifyField.getValue('content'),
             telephone: modifyField.getValue('telephone'),
             email: modifyField.getValue('email'),
-            filePathArray: modifyField.getValue('filePathArray').toString(),
-            address: modifyField.getValue('address').province +","+ modifyField.getValue('address').city +","+  modifyField.getValue('address').region,
+            filePathArray: modifyField.getValue('filePathArray')?.toString(),
+            address: modifyField.getValue('address'),
             id: modifyField.getValue('id'),
             oldPath:modifyField.getValue('oldPath')
             })
             .then(function (response) {
                 console.log(response);
                 if (response.data.msg == "success") {
-                    Message.success('已申请，请等待管理员审核');
-                }
+                    Message.success('已修改');                }
                 else {
                     Message.error(response.data.msg);
                 }

@@ -204,7 +204,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
       return <Table dataSource={dataSource}  size="small" hasBorder={false}>
                 {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
 
-                <Table.Column dataIndex="id" title="序号" />
+                {/* <Table.Column dataIndex="id" title="序号" /> */}
                 <Table.Column dataIndex="company" title="标题" />
                 <Table.Column dataIndex="address" title="地址" />
                 <Table.Column dataIndex="applyTime"  title="申请时间"/>
@@ -228,7 +228,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
     return <Table dataSource={dataSource}  hasBorder={false}>
     {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
 
-    <Table.Column dataIndex="id" title="序号" />
+    {/* <Table.Column dataIndex="id" title="序号" /> */}
     <Table.Column dataIndex="company" title="标题" />
     <Table.Column dataIndex="content" title="介绍" />
     <Table.Column dataIndex="address" title="地址" />
@@ -303,7 +303,7 @@ const SettingSystemBlock: React.SFC = (props): JSX.Element => {
             />
             <Card.Content>
               <Table dataSource={joinStatus} hasBorder={false}>
-                <Table.Column title="序号" dataIndex="id" />
+                {/* <Table.Column title="序号" dataIndex="id" /> */}
                 <Table.Column title="项目名称" dataIndex="company" />
                 <Table.Column title="项目邮箱" dataIndex="apply_email" />
                 <Table.Column title="项目电话号码" dataIndex="apply_telephone" />   

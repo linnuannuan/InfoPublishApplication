@@ -205,6 +205,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
   const [vipList, setVipList] = useState([]);
   const [applyData, setApplyData] = useState([]);
   const [inited, setInited] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [postData, setValue] = useState<SettingSystemProps>(dataSource);
 
   //会员审核页数
@@ -215,7 +216,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
   //信息促成
   const [joinPage,setJoinPage]=useState({
                                   total:10,
-                                  pageSize:10
+                                  pageSize:3
                                 })
                       
 
@@ -301,6 +302,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
 
   const onPaginationChange = (value) => {
     // setLoading(true);
+    setCurrentPage(value)
     refreshVipData(value)
 
   };
@@ -323,7 +325,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       }
     })
     .then(function (response) {
-      refreshVipData(1)
+      refreshVipData(currentPage)
       console.log(response);
     })
     .catch(function (error) {
@@ -342,7 +344,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       }
     )
     .then(function (response) {
-      refreshVipData(1)
+      refreshVipData(currentPage)
       console.log(response);
     })
     .catch(function (error) {
@@ -362,7 +364,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       }
       )
       .then(function (response) {
-        refreshJoinData(1)
+        refreshJoinData(currentPage)
         console.log(response);
       })
       .catch(function (error) {
@@ -379,13 +381,14 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
       }
       )
       .then(function (response) {
-        refreshJoinData(1)
+        refreshJoinData(currentPage)
         console.log(response);
       })
       .catch(function (error) {
         console.log(error);
       });
     } 
+    
   }
 
 
@@ -541,9 +544,9 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
             <Card.Content>
               <Table size={isPhone?"small":"medium"} dataSource={vipList}  hasBorder={false}>
                 {/* <Table.Column dataIndex="logo" cell={url => <Avatar src={url} />} width={50} /> */}
-                <Table.Column dataIndex="id" title="序号" />
+                {/* <Table.Column dataIndex="id" title="序号" /> */}
                 <Table.Column dataIndex="applyUserId" title="用户ID" />
-                <Table.Column dataIndex="applyUserName" title="姓名"/>
+                <Table.Column dataIndex="applyUsername" title="姓名"/>
                 <Table.Column dataIndex="vipType" title="会员类型" cell={(value)=>value==0?"正式":"体验"}/>
                 {/* <Table.Column dataIndex="period" /> */}
                 <Table.Column dataIndex="applyTime"  title="申请时间"/>
@@ -586,7 +589,7 @@ const SettingSystemBlock: React.SFC<SettingSystemProps> = (props): JSX.Element =
             />
             <Card.Content>
               <Table size={isPhone?"small":"medium"} dataSource={applyData} hasBorder={false}>
-                <Table.Column title="Id" dataIndex="id" />
+                {/* <Table.Column title="Id" dataIndex="id" /> */}
                 <Table.Column title="申请人" dataIndex="username" />
                 <Table.Column title="名称" dataIndex="company" />
                 <Table.Column title="邮箱" dataIndex="email" />

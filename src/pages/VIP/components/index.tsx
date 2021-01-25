@@ -28,7 +28,7 @@ export interface ICardItem {
     applyTime?: string;
     verifyFlag?: number;
     validFlag?: number
-    picPath?: String;
+    picturePath?: String;
     address?: String;
 }
 export interface InvestInfo {
@@ -38,7 +38,7 @@ export interface InvestInfo {
     telephone: string,
     email: string,
     filePathArray: Array<String>,
-    picPath: string,
+    picturePath: string,
 }
 
 export interface DataSource {
@@ -433,8 +433,8 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                 'content': record.content,
                 'telephone': record.telephone,
                 'email': record.email,
-                'filePathArray': record.picPath?.split(","),
-                'oldPath': record.picPath,
+                'filePathArray': record.picturePath?.split(","),
+                'oldPath': record.picturePath,
                 'id': record.id,
             }
         )
@@ -460,7 +460,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
     //普通用户提交VIP信息
     const submit = async () => {
 
-        axios.post('/user/applyVipInfo', {
+        axios.post('/vip/applyVipInfo', {
             company: newInfoField.getValues().company,
             address: newInfoField.getValues().address,
             content: newInfoField.getValues().content,
@@ -538,15 +538,16 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
             content: modifyField.getValue('content'),
             telephone: modifyField.getValue('telephone'),
             email: modifyField.getValue('email'),
-            filePathArray: modifyField.getValue('filePathArray').toString(),
-            address: modifyField.getValue('address').province + "," + modifyField.getValue('address').city + "," + modifyField.getValue('address').region,
+            filePathArray: modifyField.getValue('filePathArray')?.toString(),
+            address: modifyField.getValue('address'),
             id: modifyField.getValue('id'),
             oldPath: modifyField.getValue('oldPath')
         })
             .then(function (response) {
                 console.log(response);
                 if (response.data.msg == "success") {
-                    Message.success('已申请，请等待管理员审核');
+                    Message.success('已修改');                
+                    refreshData()
                 }
                 else {
                     Message.error(response.data.msg);
@@ -760,7 +761,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                                     <div className={styles.main}>
                                         <div className={styles.left}>
                                             <div>
-                                                {isPhone ? '' : <img src={c.picPath?.split(",")[0]} alt="img" />}
+                                                {isPhone ? '' : <img src={c.picturePath?.split(",")[0]} alt="img" />}
                                                 <div className={isPhone ? styles.phoneTitle : ""}>
                                                     {c.company}
                                                 </div>
@@ -831,7 +832,7 @@ const BasicList: React.FunctionComponent<BasicListProps> = (props: BasicListProp
                                             beforeUpload={beforeUpload}
                                             onChange={onChange}
                                             onSuccess={onModifySuccess}
-                                            defaultValue={modifyField.getValue("picPath")?.split(',').map((d, i) => { let c = {}; c.id = i; c.url = 'http://www.xycyzs.com/' + d; return c })}
+                                            defaultValue={modifyField.getValue("picturePath")?.split(',').map((d, i) => { let c = {}; c.id = i; c.url = 'http://www.xycyzs.com/' + d; return c })}
                                         >
                                             <Button type="primary" size={isPhone ? "small" : "medium"} style={{ margin: '0 0 10px' }}>Upload File</Button>
                                         </Upload>
